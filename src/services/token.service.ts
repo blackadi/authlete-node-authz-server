@@ -5,17 +5,29 @@ import { authleteApi, serviceId } from "./authlete.service";
 export class TokenService {
   async process(req: any): Promise<TokenResponse> {
     // Convert Express POST body into x-www-form-urlencoded
+    console.log("req.body:", req.body); //testing only
     const parameters = new URLSearchParams(req.body).toString();
     console.log("Token request parameters:", parameters); //testing only
-    console.log("req.body.clientId:", req.body.clientId); //testing only
-    console.log("req.body.clientSecret:", req.body.clientSecret); //testing only
-    console.log("req.body.parameters:", req.body.parameters); //testing only
+
+    const auth = req.headers["authorization"];
+    console.log("req.headers.authorization:", auth); //testing only
+
+    //decode basic base64 client credentials if present
+    if (auth && auth.startsWith("Basic ")) {
+      const base64Credentials = auth.slice("Basic ".length);
+      const credentials = Buffer.from(base64Credentials, "base64").toString("utf-8");
+      const [clientId, clientSecret] = credentials.split(":");
+      req.body.clientId = clientId;
+      req.body.clientSecret = clientSecret;
+      console.log("Decoded clientId:", req.body.clientId);
+      console.log("Decoded clientSecret:", req.body.clientSecret);
+    }
 
     // Call Authlete /token API
     const response = await authleteApi.token.process({
       serviceId,
       tokenRequest:{
-        parameters: req.body.parameters,
+        parameters: parameters,
         clientId: req.body.clientId,
         clientSecret: req.body.clientSecret
       }

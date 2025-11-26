@@ -17,8 +17,8 @@ import { errorHandler } from "./middleware/errorHandler";
 
 export const app = express();
 
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(
