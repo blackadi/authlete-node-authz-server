@@ -5,9 +5,9 @@ A small example OAuth 2.0 / OpenID Connect authorization server built with Expre
 This repository is intended as a learning/demo server — it is not production hardened. Use it to explore the HTTP endpoints and how an OAuth2 flow can be implemented using Authlete APIs.
 
 ## Features
-- Authorization endpoint (GET/POST)
+- Authorization endpoint (POST)
 - Token endpoint (POST)
-- UserInfo endpoint (GET/POST)
+- UserInfo endpoint (POST)
 - Introspection and Revocation endpoints (POST)
 - Session-based login and consent UI (minimal views in `src/views`)
 - Simple routes listing UI at `/routes`
@@ -58,20 +58,20 @@ By default the app listens on the port configured in `src/server.ts` (commonly `
 ## Current routes
 The server exposes the following endpoints (mounted at the server root):
 
-- `GET  /authorization` — Authorization endpoint (interactive GET)
-- `POST /token` — Token endpoint (accepts form-encoded or JSON payloads)
-- `POST /userinfo` — UserInfo endpoint (POST)
-- `POST /introspection` — Introspection endpoint
-- `POST /revocation` — Revocation endpoint
-- `GET  /login` — Login page (view)
-- `POST /login` — Login submission
-- `GET  /consent` — Consent page (view)
-- `POST /consent` — Consent submission
-- `GET  /.well-known/jwks` — JWKS
-- `GET  /logout` — RP-initiated logout (front-channel redirect)
-- `POST /backchannel_logout` — OP-initiated backchannel logout
-- `GET  /routes` — Routes listing UI (HTML)
-- `GET  /routes.json` — JSON list of routes used by `/routes`
+- `GET  /api/authorization` — Authorization endpoint (interactive GET)
+- `POST /api/token` — Token endpoint (accepts form-encoded or JSON payloads)
+- `POST /api/userinfo` — UserInfo endpoint (POST)
+- `POST /api/introspection` — Introspection endpoint
+- `POST /api/revocation` — Revocation endpoint
+- `GET  /api/login` — Login page (view)
+- `POST /api/login` — Login submission
+- `GET  /api/consent` — Consent page (view)
+- `POST /api/consent` — Consent submission
+- `GET  /api/.well-known/jwks` — JWKS
+- `GET  /api/logout` — RP-initiated logout (front-channel redirect)
+- `POST /api/backchannel_logout` — OP-initiated backchannel logout
+- `GET  /api/routes` — Routes listing UI (HTML)
+- `GET  /api/routes.json` — JSON list of routes used by `/routes`
 
 
 ## Example OAuth 2.0 flows (curl)
@@ -93,7 +93,7 @@ http://localhost:3000/authorization?response_type=code&client_id=YOUR_CLIENT_ID&
 Form-encoded example:
 
 ```bash
-curl -X POST http://localhost:3000/token \
+curl -X POST http://localhost:3000/api/token \
 	-H "Content-Type: application/x-www-form-urlencoded" \
 	-H "Authorization: Basic BASE64(client_id:client_secret)" \
 	-d "grant_type=authorization_code" \
@@ -104,7 +104,7 @@ curl -X POST http://localhost:3000/token \
 JSON example (application/json):
 
 ```bash
-curl -X POST http://localhost:3000/token \
+curl -X POST http://localhost:3000/api/token \
 	-H "Content-Type: application/json" \
 	-d '{
 		"grant_type":"authorization_code",
@@ -118,7 +118,7 @@ curl -X POST http://localhost:3000/token \
 2) Resource Owner Password Credentials (for testing only)
 
 ```bash
-curl -X POST http://localhost:3000/token \
+curl -X POST http://localhost:3000/api/token \
 	-H "Content-Type: application/x-www-form-urlencoded" \
 	-d "grant_type=password" \
 	-d "username=alice" \
@@ -129,7 +129,7 @@ curl -X POST http://localhost:3000/token \
 3) Introspection
 
 ```bash
-curl -X POST http://localhost:3000/introspection \
+curl -X POST http://localhost:3000/api/introspection \
 	-H "Content-Type: application/x-www-form-urlencoded" \
 	-H "Authorization: Basic BASE64(client_id:client_secret)" \
 	-d "token=ACCESS_OR_REFRESH_TOKEN"
@@ -138,7 +138,7 @@ curl -X POST http://localhost:3000/introspection \
 4) Revocation
 
 ```bash
-curl -X POST http://localhost:3000/revocation \
+curl -X POST http://localhost:3000/api/revocation \
 	-H "Content-Type: application/x-www-form-urlencoded" \
 	-H "Authorization: Basic BASE64(client_id:client_secret)" \
 	-d "token=ACCESS_OR_REFRESH_TOKEN"
@@ -147,7 +147,7 @@ curl -X POST http://localhost:3000/revocation \
 5) UserInfo
 
 ```bash
-curl -X POST http://localhost:3000/userinfo \
+curl -X POST http://localhost:3000/api/userinfo \
 	-H "Content-Type: application/json" \
     -d '{"token":"YOUR_ACCESS_TOKEN"}'
 ```
@@ -157,7 +157,7 @@ curl -X POST http://localhost:3000/userinfo \
 - When testing flows with curl you must forward the session cookie between requests. Use `curl -c cookies.txt -b cookies.txt ...` to persist cookies across calls.
 
 ## Development tips
-- Open `http://localhost:3000/routes` to see clickable GET endpoints and curl snippets for POST endpoints.
+- Open `http://localhost:3000/api/routes` to see clickable GET endpoints and curl snippets for POST endpoints.
 - The server logs incoming requests and request bodies which helps with debugging.
 
 ## License & Disclaimer
@@ -165,3 +165,22 @@ This example is provided for educational purposes. It is not production-ready an
 
 If you'd like, I can add a Dockerfile, write automated tests, or wire a persistent session store (Redis) next.
 
+## Testing with Demo REACT client
+This project contains  a React SPA that plays a role as OAuth 2.0 client (Authorization Code Flow with PKCE).
+
+```bash
+cd /client
+cp .env.example .env
+
+npm install
+npm run build
+npm run preview
+```
+
+The SPA will run on http://localhost:3001
+
+![A screenshot of the homepage](images/Screenshot_1.png)
+![A screenshot of the login](images/Screenshot_2.png)
+![A screenshot of the consent](images/Screenshot_3.png)
+![A screenshot of the callback](images/Screenshot_4.png)
+![A screenshot of the decoded token](images/Screenshot_5.png)

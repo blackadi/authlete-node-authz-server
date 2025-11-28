@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { sessionMiddleware } from "./middleware/session";
@@ -17,6 +18,9 @@ import { errorHandler } from "./middleware/errorHandler";
 
 export const app = express();
 
+app.use(cors({
+  origin: 'http://localhost:3001' //Must match your frontend's exact origin
+}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -30,15 +34,16 @@ app.use(
 );
 
 // Routes
-app.use("/", routesList);
-app.use("/", authorizationRoutes);
-app.use("/", tokenRoutes);
-app.use("/", userinfoRoutes);
-app.use("/", introspectionRoutes);
-app.use("/", revocationRoutes);
-app.use("/", sessionRoutes);
-app.use("/", jwksRoutes);
-app.use("/", logoutRoutes);
+const routerURL = "/api";
+app.use(routerURL, routesList);
+app.use(routerURL, authorizationRoutes);
+app.use(routerURL, tokenRoutes);
+app.use(routerURL, userinfoRoutes);
+app.use(routerURL, introspectionRoutes);
+app.use(routerURL, revocationRoutes);
+app.use(routerURL, sessionRoutes);
+app.use(routerURL, jwksRoutes);
+app.use(routerURL, logoutRoutes);
 
 // Error Handler
 app.use(errorHandler);

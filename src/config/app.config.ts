@@ -1,4 +1,4 @@
 export const appConfig = {
-  loginUrl: "/session/login",
-  consentUrl: "/session/consent"
+  loginUrl: "/api/session/login",
+  consentUrl: "/api/session/consent"
 };
