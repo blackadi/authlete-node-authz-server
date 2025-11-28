@@ -28,12 +28,18 @@ npm install
 2. Create a `.env` file in the project root or set environment variables. Minimal example `.env`:
 
 ```text
-SESSION_SECRET=your_session_secret
-AUTHLETE_BASE_URL=https://api.authlete.com
-AUTHLETE_API_KEY=your_api_key
-AUTHLETE_API_SECRET=your_api_secret
-SERVICE_ID=1234567
+# Authlete Configuration
+AUTHLETE_BEARER_TOKEN=your_authlete_bearer_token_here
+AUTHLETE_BASE_URL=https://{region}.authlete.com  #example: https://us.authlete.com
+AUTHLETE_SERVICE_ID=your_authlete_service_id_here
+
+# Server Configuration
+PORT=3000
 NODE_ENV=development
+
+# Session Configuration
+SESSION_SECRET=your_session_secret_here
+
 ```
 
 3. Start in development mode
@@ -149,4 +155,6 @@ curl -X POST http://localhost:3000/userinfo \
 ## Development tips
 - Open `http://localhost:3000/routes` to see clickable GET endpoints and curl snippets for POST endpoints.
 - The server logs incoming requests and request bodies which helps with debugging.
+
+
 
