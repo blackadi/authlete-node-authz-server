@@ -152,9 +152,16 @@ curl -X POST http://localhost:3000/userinfo \
     -d '{"token":"YOUR_ACCESS_TOKEN"}'
 ```
 
+## Session handling notes
+- The project uses `express-session` to store login/authorization context across interactive steps. For development the default in-memory store is used. For multi-process or production deployments replace this with a persistent store (e.g., Redis, MongoDB).
+- When testing flows with curl you must forward the session cookie between requests. Use `curl -c cookies.txt -b cookies.txt ...` to persist cookies across calls.
+
 ## Development tips
 - Open `http://localhost:3000/routes` to see clickable GET endpoints and curl snippets for POST endpoints.
 - The server logs incoming requests and request bodies which helps with debugging.
 
+## License & Disclaimer
+This example is provided for educational purposes. It is not production-ready and omits many security best practices (CSRF protection, input validation, secure cookie settings for production, etc.).
 
+If you'd like, I can add a Dockerfile, write automated tests, or wire a persistent session store (Redis) next.
 
