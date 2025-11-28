@@ -1,32 +1,27 @@
-import { UserinfoIssueResponse, UserinfoResponse } from "@authlete/typescript-sdk/dist/commonjs/models";
+import { UserinfoIssueRequest, UserinfoIssueResponse, UserinfoRequest, UserinfoResponse } from "@authlete/typescript-sdk/dist/commonjs/models";
 import { authleteApi, serviceId } from "./authlete.service";
 
 export class UserInfoService {
   async process(req: any): Promise<UserinfoResponse> {
-    // Extract the access token from the Authorization header
-    const authHeader = req.headers["authorization"] || "";
+    const {...reqBody}: UserinfoRequest = req.body;
+    console.log("Userinfo parameters:", reqBody); //testing only
 
     // Call Authlete /userinfo API
     const response = await authleteApi.userinfo.process({
       serviceId,
-      userinfoRequest: {
-        token: authHeader.replace("Bearer ", ""),
-      }
+      userinfoRequest: reqBody
     });
 
     return response;
   }
 
   async issue(req: any): Promise<UserinfoIssueResponse> {
-    // Extract the access token from the Authorization header
-    const authHeader = req.headers["authorization"] || "";
+    const {...reqBody}: UserinfoIssueRequest = req.body;
 
     // Call Authlete /userinfo API to issue user info
     const response = await authleteApi.userinfo.issue({
       serviceId,
-      userinfoIssueRequest: {
-        token: authHeader.replace("Bearer ", ""),
-      }
+      userinfoIssueRequest: reqBody
     });
 
     return response;

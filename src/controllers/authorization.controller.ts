@@ -7,7 +7,6 @@ import session from "express-session";
 
 const authorizationService = new AuthorizationService();
 
-let error;
 export const authorizationController = {
   handleAuthorization: async (req: Request & { session: Partial<session.SessionData> }, res: Response) => {
     try {
@@ -17,12 +16,10 @@ export const authorizationController = {
 
       switch (result.action) {
         case "BAD_REQUEST":
-            error = await authorizationService.fail(result.ticket ?? "");
-          return res.status(400).send(result.responseContent + (error ? `\nError from Authlete fail endpoint: ${error}` : ""));
+          return res.status(400).send(result.responseContent);
 
         case "INTERNAL_SERVER_ERROR":
-            error = await authorizationService.fail(result.ticket ?? "");
-          return res.status(500).send(result.responseContent + (error ? `\nError from Authlete fail endpoint: ${error}` : ""));
+          return res.status(500).send(result.responseContent);
 
         case "LOCATION":
             res.setHeader("Location", result.responseContent??"");

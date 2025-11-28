@@ -1,36 +1,63 @@
-import { TokenFailResponse, TokenIssueResponse, TokenResponse } from "@authlete/typescript-sdk/dist/commonjs/models";
+import { TokenFailResponse, TokenIssueResponse, TokenRequest, TokenResponse } from "@authlete/typescript-sdk/dist/commonjs/models";
 import { authleteApi, serviceId } from "./authlete.service";
-
+import { Request } from "express";
 
 export class TokenService {
-  async process(req: any): Promise<TokenResponse> {
-    // Convert Express POST body into x-www-form-urlencoded
-    console.log("req.body:", req.body); //testing only
-    const parameters = new URLSearchParams(req.body).toString();
-    console.log("Token request parameters:", parameters); //testing only
+  async process(req: Request): Promise<TokenResponse> {
 
-    const auth = req.headers["authorization"];
-    console.log("req.headers.authorization:", auth); //testing only
 
-    //decode basic base64 client credentials if present
-    if (auth && auth.startsWith("Basic ")) {
-      const base64Credentials = auth.slice("Basic ".length);
-      const credentials = Buffer.from(base64Credentials, "base64").toString("utf-8");
-      const [clientId, clientSecret] = credentials.split(":");
-      req.body.clientId = clientId;
-      req.body.clientSecret = clientSecret;
-      console.log("Decoded clientId:", req.body.clientId);
-      console.log("Decoded clientSecret:", req.body.clientSecret);
+    let {clientId, clientSecret, clientCertificate, clientCertificatePath, htm, htu, accessToken, jwtAtClaims,accessTokenDuration, dpop, dpopNonceRequired,oauthClientAttestation, oauthClientAttestationPop,properties,refreshTokenDuration, ...otherBody}: TokenRequest = req.body;
+    console.log("otherBody:", otherBody); //testing only
+
+    const {...auth} = req.headers;
+    //const auth = req.headers["authorization"];
+    // console.log("req.headers.authorization:", auth); //testing only
+
+    // Convert remaining fields to application/x-www-form-urlencoded
+    const params = new URLSearchParams();
+
+    for (const [key, value] of Object.entries(otherBody)) {
+      if (value !== undefined && value !== null) {
+        params.append(key, String(value));
+      }
     }
 
+    otherBody.parameters = params.toString();
+    // console.log("xWwwFormUrlencoded:", otherBody.parameters); //testing only
+
+    //decode basic base64 client credentials if present
+    const {authorization} = req.headers;
+    if (authorization && authorization.startsWith("Basic ")) {
+      const base64Credentials = authorization.slice("Basic ".length);
+      const credentials = Buffer.from(base64Credentials, "base64").toString("utf-8");
+      [clientId, clientSecret] = credentials.split(":");
+    }
+
+    const reqBody: TokenRequest = {
+      parameters: otherBody.parameters,
+      clientId: clientId,
+      clientSecret: clientSecret,
+      clientCertificate: clientCertificate,
+      clientCertificatePath: clientCertificatePath,
+      htm: htm,
+      htu: htu,
+      accessToken: accessToken,
+      jwtAtClaims: jwtAtClaims,
+      accessTokenDuration: accessTokenDuration,
+      dpop: dpop,
+      dpopNonceRequired: dpopNonceRequired,
+      oauthClientAttestation: oauthClientAttestation,
+      oauthClientAttestationPop: oauthClientAttestationPop,
+      properties: properties,
+      refreshTokenDuration: refreshTokenDuration
+    }
+
+    console.log("Token request body:", reqBody); //testing only
+    
     // Call Authlete /token API
     const response = await authleteApi.token.process({
       serviceId,
-      tokenRequest:{
-        parameters: parameters,
-        clientId: req.body.clientId,
-        clientSecret: req.body.clientSecret
-      }
+      tokenRequest: reqBody
     });
 
     return response;

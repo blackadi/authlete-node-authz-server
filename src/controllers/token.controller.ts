@@ -1,29 +1,29 @@
 import { Request, Response } from "express";
 import { TokenService } from "../services/token.service";
+import session from "express-session";
 
 const tokenService = new TokenService();
 
-let error;
 export const tokenController = {
-  handleToken: async (req: Request, res: Response) => {
+  handleToken: async (req: Request & { session: Partial<session.SessionData> }, res: Response) => {
     try {
       const result = await tokenService.process(req);
 
       switch (result.action) {
         case "BAD_REQUEST":
           res.setHeader("Content-Type", "application/json");
-          error = tokenService.fail(result.ticket ?? "");
-          return res.status(400).send(result.responseContent + (error ? `\nError from Authlete fail endpoint: ${error}` : ""));
+          //console.log(req.session);
+          return res.status(400).send(result);
 
         case "INVALID_CLIENT":
             res.setHeader("Content-Type", "application/json");
-            error = tokenService.fail(result.ticket ?? "");
-          return res.status(401).send(result.responseContent + (error ? `\nError from Authlete fail endpoint: ${error}` : ""));
+            //console.log(req.session);
+          return res.status(401).send(result);
 
         case "INTERNAL_SERVER_ERROR":
             res.setHeader("Content-Type", "application/json");
-            error = tokenService.fail(result.ticket ?? "");
-          return res.status(500).send(result.responseContent + (error ? `\nError from Authlete fail endpoint: ${error}` : ""));
+            //console.log(req.session);
+          return res.status(500).send(result);
 
         case "JWT_BEARER":
           res.setHeader("Content-Type", "application/json");

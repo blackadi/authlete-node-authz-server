@@ -13,7 +13,7 @@ const defaultCookie: any = {
 const defaultOptions: any = {
   secret: process.env.SESSION_SECRET || "change_this_secret",
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true, // Change to true so sessions are saved even if empty
   cookie: defaultCookie,
 };
 

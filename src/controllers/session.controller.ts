@@ -68,14 +68,15 @@ export const sessionController = {
         const response = await authorizationService.issue(ticket, req.session.user);
         console.log("Authorization issue response:", response); //testing only
         resultUrl = response.responseContent ?? ""; // redirect URI with code/token
+        console.log("If you want to call curl with saved with connect.sid which contains the ticket and user:", req.cookies["connect.sid"]); //testing only
       } else {
         // Call Authlete /authorization/fail API
-        const response = await authorizationService.fail(ticket );
+        const response = await authorizationService.fail(ticket);
         resultUrl = response.responseContent??""; // redirect URI with error
       }
 
       // Clear session authorization info
-      delete req.session.authorization;
+      //delete req.session.authorization;
 
       // Redirect back to client with result
       return res.redirect(resultUrl);

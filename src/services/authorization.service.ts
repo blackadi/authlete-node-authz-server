@@ -1,18 +1,26 @@
-import { AuthorizationFailResponse, AuthorizationResponse } from "@authlete/typescript-sdk/dist/commonjs/models";
+import { AuthorizationFailResponse, AuthorizationRequest, AuthorizationResponse } from "@authlete/typescript-sdk/dist/commonjs/models";
 import { authleteApi, serviceId } from "./authlete.service";
 
 export class AuthorizationService {
   async process(req: any): Promise<AuthorizationResponse> {
+    
     // Convert Express request into a query string
-    const parameters = new URLSearchParams(req.query).toString();
-    console.log("Authorization request parameters:", parameters); //testing only
+    const {context, ...reqBody}: AuthorizationRequest = req.method === "GET" ? req.query : req.body;
+    console.log("Authorization request parameters:", reqBody); //testing only
 
+    const params = new URLSearchParams();
+
+    for (const [key, value] of Object.entries(reqBody)) {
+      if (value !== undefined && value !== null) {
+        params.append(key, String(value));
+      }
+    }
+
+    reqBody.parameters = params.toString();
     // Call Authlete /authorization API
     const response = await authleteApi.authorization.processRequest({
         serviceId: serviceId,
-        authorizationRequest: {
-            parameters
-        }
+        authorizationRequest: reqBody
     });
 
     return response;
