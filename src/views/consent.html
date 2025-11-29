@@ -25,6 +25,7 @@
         <div>
           <h1>Application Consent</h1>
           <div class="client">Client: <strong id="client-name">Unknown</strong></div>
+          <div class="client">Client: <strong id="client-id">Unknown</strong></div>
         </div>
       </header>
 
@@ -32,9 +33,7 @@
 
       <form method="POST" action="/api/session/consent">
         <ul class="scopes">
-          <li>Access your profile information</li>
-          <li>Access your email address</li>
-          <li>Perform actions on your behalf</li>
+          <li>Loading scopes...</li>
         </ul>
 
         <div class="buttons">
@@ -50,8 +49,25 @@
       (function(){
         // Example: set client name from query param ?client=...
         const params = new URLSearchParams(location.search);
-        const c = params.get('client');
-        if(c) document.getElementById('client-name').textContent = decodeURIComponent(c);
+        const clientName = params.get('clientName');
+        const ClientId = params.get('clientId');
+        const Scopes = params.get('scopes').split(',');
+        if(clientName) document.getElementById('client-name').textContent = decodeURIComponent(clientName);
+        if(ClientId) document.getElementById('client-id').textContent = decodeURIComponent(ClientId);
+
+        // scopes array: render descriptions
+          const scopesEl = document.querySelector('ul.scopes');
+          scopesEl.innerHTML = '';
+          if (Scopes.length) {
+            Scopes.forEach(s => {
+              const li = document.createElement('li');
+              const name = s || '';
+              li.textContent = name ? `${name}` : 'Unknown';
+              scopesEl.appendChild(li);
+            });
+          } else {
+            scopesEl.innerHTML = '<li>No scopes requested</li>';
+          }
       })();
     </script>
   </body>

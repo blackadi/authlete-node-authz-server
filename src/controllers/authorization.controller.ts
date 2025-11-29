@@ -35,10 +35,14 @@ export const authorizationController = {
           return res.redirect(result.responseContent??"");
 
         case "INTERACTION":
+          // console.log("test", (req.query.scope || '').split(/\s+/).filter(Boolean));
           // Save parameters for login/consent steps
           req.session.authorization = {
             resultMessage: result.resultMessage ?? "",
             ticket: result.ticket ?? "",
+            clientId: result.client?.clientId ?? 0,
+            clientName: result.client?.clientName ?? "",
+            scopes: (req.query.scope || '').split(/\s+/).filter(Boolean) ?? [],
           };
           return res.redirect(appConfig.loginUrl);
 

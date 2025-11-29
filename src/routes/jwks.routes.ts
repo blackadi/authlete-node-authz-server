@@ -3,6 +3,6 @@ import { JwksController } from "../controllers/jwks.controller";
 
 const router = Router();
 
-router.get("/.well-known/jwks", JwksController.handle);
+router.get("/.well-known/jwks.json", JwksController.handle);
 
 export default router;

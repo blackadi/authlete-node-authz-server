@@ -55,7 +55,7 @@
   <script>
     async function load() {
       try {
-        const res = await fetch('/routes.json');
+        const res = await fetch('/api/routes.json');
         const data = await res.json();
         const base = data.base || (location.protocol + '//' + location.host);
         document.getElementById('base').textContent = base;

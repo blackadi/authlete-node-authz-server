@@ -32,7 +32,9 @@ export const sessionController = {
     }
 
     // After login, show consent page
-    return res.redirect(appConfig.consentUrl);
+    const scopes = authz.scopes?.join(",") || "";
+    console.log(scopes);
+    return res.redirect(appConfig.consentUrl + "?clientId=" + authz.clientId + "&clientName=" + authz.clientName + "&scopes=" + scopes);
   },
 
   showConsent: (req: Request & { session: Partial<session.SessionData> }, res: Response) => {
@@ -65,6 +67,9 @@ export const sessionController = {
         // Call Authlete /authorization/issue API
         console.log("Issuing authorization for ticket:", ticket); //testing only
         console.log("Issuing authorization for user:", req.session.user); //testing only
+        console.log("Issuing authorization for clientId:", req.session.authorization.clientId); //testing only
+        console.log("Issuing authorization for scopes:", req.session.authorization.scopes); //testing only
+        console.log("Issuing authorization for clientName:", req.session.authorization.clientName); //testing only
         const response = await authorizationService.issue(ticket, req.session.user);
         console.log("Authorization issue response:", response); //testing only
         resultUrl = response.responseContent ?? ""; // redirect URI with code/token
