@@ -14,6 +14,7 @@ const ROUTES: { method: string; path: string; description?: string }[] = [
   { method: "GET", path: "/api/session/consent", description: "Consent page" },
   { method: "POST", path: "/api/session/consent", description: "Consent submission" },
   { method: "GET", path: "/api/.well-known/jwks.json", description: "JWKS" },
+  { method: "GET", path: "/api/.well-known/openid-configuration", description: "OpenID Configuration" },
   { method: "GET", path: "/api/logout", description: "RP-initiated logout (front-channel redirect)" },
   { method: "POST", path: "/api/backchannel_logout", description: "OP-initiated backchannel logout" },
 ];

@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { Scope } from "@authlete/typescript-sdk/dist/commonjs/models";
 import { AuthorizationService } from "../services/authorization.service";
 import { appConfig } from "../config/app.config";
 
@@ -13,7 +14,7 @@ export const authorizationController = {
         
       const result = await authorizationService.process(req);
         
-
+      
       switch (result.action) {
         case "BAD_REQUEST":
           return res.status(400).send(result.responseContent);
@@ -42,7 +43,7 @@ export const authorizationController = {
             ticket: result.ticket ?? "",
             clientId: result.client?.clientId ?? 0,
             clientName: result.client?.clientName ?? "",
-            scopes: (req.query.scope || '').split(/\s+/).filter(Boolean) ?? [],
+            scopes: ((typeof req.query.scope === 'string' ? req.query.scope : '').split(/\s+/).filter(Boolean).map(s => s as unknown as Scope)) ?? [],
           };
           return res.redirect(appConfig.loginUrl);
 

@@ -11,6 +11,7 @@ import introspectionRoutes from "./routes/introspection.routes";
 import revocationRoutes from "./routes/revocation.routes";
 import sessionRoutes from "./routes/session.routes";
 import jwksRoutes from "./routes/jwks.routes";
+import discoveryRouters from './routes/discovery.routes'
 import logoutRoutes from "./routes/logout.routes";
 import routesList from "./routes/routes-list.routes";
 
@@ -43,6 +44,7 @@ app.use(routerURL, introspectionRoutes);
 app.use(routerURL, revocationRoutes);
 app.use(routerURL, sessionRoutes);
 app.use(routerURL, jwksRoutes);
+app.use(routerURL, discoveryRouters)
 app.use(routerURL, logoutRoutes);
 
 // Error Handler

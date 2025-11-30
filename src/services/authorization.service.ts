@@ -1,4 +1,4 @@
-import { AuthorizationFailResponse, AuthorizationRequest, AuthorizationResponse } from "@authlete/typescript-sdk/dist/commonjs/models";
+import { AuthorizationFailRequestReason, AuthorizationFailResponse, AuthorizationRequest, AuthorizationResponse } from "@authlete/typescript-sdk/dist/commonjs/models";
 import { authleteApi, serviceId } from "./authlete.service";
 
 export class AuthorizationService {
@@ -26,12 +26,12 @@ export class AuthorizationService {
     return response;
   }
 
-  async fail (ticket: string): Promise<AuthorizationFailResponse> {
+  async fail (ticket: string, reason: AuthorizationFailRequestReason): Promise<AuthorizationFailResponse> {
     const response = await authleteApi.authorization.fail({
       serviceId,
       authorizationFailRequest: {
         ticket,
-        reason: "NOT_AUTHENTICATED"
+        reason
       }
     });
     
@@ -39,11 +39,13 @@ export class AuthorizationService {
   }
 
   async issue (ticket: string, subject: string): Promise<AuthorizationResponse> {
+    const optionalClaims = "{\"name\": \"Odai Shalabi\",\"email\": \"blackadi@blackadi.dev\",\"email_verified\": true,\"picture\": \"https://lh3.googleusercontent.com/a/ACg8ocKxOjqZ-NPCUuRAOATIfXjeNrawMCtk6xHBKHJagUKPEURfHWno=s288-c-no\"}";
     const response = await authleteApi.authorization.issue({
       serviceId,
       authorizationIssueRequest: {
         ticket,
-        subject
+        subject,
+        claims: optionalClaims
       }
     });
 

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { CLIENT_ID, getRedirectUri } from '../config';
 import { apiService, TokenResponse } from '../services/api';
+import { jwtDecode, JwtPayload } from 'jwt-decode';
 
 const CallbackPage: React.FC = () => {
   const location = useLocation();
@@ -9,6 +10,7 @@ const CallbackPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [tokenResponse, setTokenResponse] = useState<TokenResponse | null>(null);
+  const [decodedIDToken, setDecodedIDToken] = useState<JwtPayload>({});
 
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -59,6 +61,11 @@ const CallbackPage: React.FC = () => {
 
         setTokenResponse(body);
         sessionStorage.setItem('token_response', JSON.stringify(body));
+
+        const token = body.id_token??"";
+        const decoded = jwtDecode(token);
+        console.log(decoded);
+        setDecodedIDToken(decoded);
       } catch (e: any) {
         setError(e?.message || 'Failed to exchange code for token');
       } finally {
@@ -91,6 +98,9 @@ const CallbackPage: React.FC = () => {
             }}
           >
             {JSON.stringify(tokenResponse, null, 2)}
+
+            <p style={{paddingTop: '1rem'}}>Decoded ID Token:{JSON.stringify(decodedIDToken, null, 2)}</p>
+            
           </pre>
         </>
       )}
