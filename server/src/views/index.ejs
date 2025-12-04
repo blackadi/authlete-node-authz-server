@@ -1,0 +1,16 @@
+<%- include('partials/head', { title: 'Default Page' }) %>
+<body>
+  <div class="card">
+    <h1><%= title || 'Default' %></h1>
+    <label><p class="lead">Query Parameters</p></label>
+    <p class="base"><strong>code:</strong> <i><%= code || 'Cannot read code.' %></i></p>
+    <p class="base"><strong>state:</strong> <i><%= state || 'Cannot read code.' %></i></p>
+    <p class="base"><strong>iss:</strong> <i><%= iss || 'Cannot read code.' %></i></p>
+
+    <% if (code !== "No code provided") { %>
+      <div class="foot"><p class="base">Next, exchange the authorization code for a token using your client or any REST tool like cURL or Postman.</p></div>
+    <% } %>
+    
+  </div>
+</body>
+</html>

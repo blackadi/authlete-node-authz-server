@@ -12,6 +12,7 @@ const HomePage: React.FC = () => {
     try {
       const { codeVerifier, codeChallenge } = await createPkcePair();
       const state = crypto.randomUUID();
+      const nonce = crypto.randomUUID();
 
       sessionStorage.setItem('pkce_code_verifier', codeVerifier);
       sessionStorage.setItem('oauth_state', state);
@@ -24,6 +25,7 @@ const HomePage: React.FC = () => {
         redirect_uri: redirectUri,
         scope: DEFAULT_SCOPES,
         state,
+        nonce,
         code_challenge: codeChallenge,
         code_challenge_method: 'S256',
       });

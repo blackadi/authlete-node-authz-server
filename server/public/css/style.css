@@ -1,0 +1,244 @@
+:root {
+  --bg: #0f1724;
+  --card: #0b1220;
+  --muted: #9aa4b2;
+  --accent: #6ee7b7;
+  --accent2: #60a5fa;
+  --text: #063a3a;
+}
+
+* {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial;
+    background: var(--bg);
+    color: #e6eef6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh
+}
+.wrap {
+  max-width: 1100px;
+  margin: 28px auto;
+  padding: 24px;
+}
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.card_table {
+    width: 100%;
+    max-width: 920px;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
+}
+.card {
+    width: 100%;
+    max-width: 480px;
+    background: var(--card);
+    border-radius: 12px;
+    padding: 28px;
+    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+thead th {
+  background: rgba(255, 255, 255, 0.02);
+  text-align: left;
+  padding: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+tbody tr {
+  border-top: 1px solid rgba(255, 255, 255, 0.02);
+}
+td {
+  padding: 12px;
+  font-size: 14px;
+  vertical-align: middle;
+}
+.method {
+  width: 88px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 6px;
+  padding: 6px 8px;
+  color: var(--text);
+  background: linear-gradient(90deg, var(--accent), #34d399);
+}
+.path a {
+  color: var(--accent2);
+  text-decoration: none;
+  font-weight: 600;
+}
+.desc {
+  color: var(--muted);
+  font-size: 13px;
+}
+.curl {
+  font-family: monospace;
+  background: #071428;
+  padding: 8px;
+  border-radius: 6px;
+  color: #9fb3d0;
+  display: inline-block;
+}
+.copy {
+  margin-left: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--muted);
+  cursor: pointer;
+}
+footer {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 13px;
+}
+@media (max-width: 920px) {
+  .method {
+    display: inline-block;
+    width: auto;
+  }
+  .wrap {
+    padding: 12px;
+  }
+  td {
+    padding: 8px;
+  }
+}
+
+h1 {
+    margin: 0 0 8px;
+    font-size: 20px
+}
+
+p.lead {
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-size: 14px
+}
+p.base {
+  margin: 0;
+  color: var(--muted);
+}
+
+label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e6edf3;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 14px
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px
+}
+
+button.primary,
+.primary {
+    background: var(--accent);
+    color: var(--text);
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block
+}
+
+button.secondary {
+    background: transparent;
+    border: 1px solid #e6edf3;
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: var(--muted);
+    cursor: pointer
+}
+
+.foot {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 13px;
+    text-align: center
+}
+
+.client {
+    font-size: 13px;
+    color: var(--muted)
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px
+}
+
+button.approve {
+    background: var(--accent2);
+    border: none;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer
+}
+
+button.deny {
+    background: transparent;
+    border: 1px solid #e6edf3;
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: var(--muted);
+    cursor: pointer
+}
+
+ul.scopes {
+    padding-left: 20px;
+    margin: 12px 0;
+    color: #e6eef6
+}
+
+@media (max-width:600px) {
+    .card {
+        padding: 16px
+    }
+
+    .buttons {
+        flex-direction: column
+    }
+}
+
+@media (max-width:480px) {
+    .card {
+        padding: 18px
+    }
+}

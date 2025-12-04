@@ -1,0 +1,150 @@
+import e, { NextFunction, Request, Response } from "express";
+import { LoginService } from "../services/login.service";
+import session from "express-session";
+import { appConfig } from "../config/app.config";
+import { AuthorizationService } from "../services/authorization.service";
+import logger from "../utils/logger";
+
+const loginService = new LoginService();
+const authorizationService = new AuthorizationService();
+
+export const sessionController = {
+  showLogin: (req: Request, res: Response) => {
+    res.render("login", { username: "admin", password: "password" });
+  },
+
+  handleLogin: async (
+    req: Request & { session: Partial<session.SessionData> },
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      const { username, password } = req.body;
+
+      // Must have ticket from OAuth2 authorization request
+      const authz = req.session.authorization;
+      if (!authz || !authz.ticket) {
+        const err = new Error("Missing authorization context - session not found");
+        (err as any).status = 401;
+        return next(err);
+      }
+
+      const loginDecision = req.body.login; // "submit" or "cancel"
+      if (loginDecision === "cancel") {
+        const log = (req as any).logger || logger;
+        log.info("Login canceled for ticket", { ticket: authz?.ticket });
+        const response = await authorizationService.fail(
+          authz?.ticket ?? "",
+          "NOT_LOGGED_IN"
+        );
+        (req as any).logger?.info("Login fail response", { content: response.responseContent });
+        return res.redirect(response.responseContent ?? "");
+      }
+
+      if (!username || !password) {
+        const err = new Error("Missing username or password");
+        (err as any).status = 400;
+        return next(err);
+      }
+
+      const user = await loginService.validateUser(username, password);
+      if (!user) {
+        const err = new Error("Invalid username or password");
+        (err as any).status = 401;
+        return next(err);
+      }
+
+      // Save user info in session
+      req.session.user = username;
+
+      // After login, show consent page
+      const scopes = authz?.scopes?.join(",") || "";
+      (req as any).logger?.debug("consent scopes", { scopes });
+      return res.redirect(
+        appConfig.consentUrl +
+          "?clientId=" +
+          authz?.clientId +
+          "&clientName=" +
+          authz?.clientName +
+          "&scopes=" +
+          scopes
+      );
+    } catch (err) {
+      next(err);
+    }
+  },
+
+  showConsent: (
+    req: Request & { session: Partial<session.SessionData> },
+    res: Response,
+    next: NextFunction
+  ) => {
+    // Show the consent UI
+    if (!req.session.user || !req.session.authorization) {
+      const err = new Error("Unauthorized - no ticket in session");
+        (err as any).status = 403;
+        return next(err);
+    }
+    const { clientName = "", scopes = [] } = req.session.authorization || {};
+    res.render("consent", { clientName, scopes });
+  },
+
+  handleConsent: async (
+    req: Request & { session: Partial<session.SessionData> },
+    res: Response,
+    next: NextFunction
+  ) => {
+    try {
+      if (!req.session.user || !req.session.authorization) {
+        const err = new Error("Unauthorized - no ticket in session");
+        (err as any).status = 403;
+        return next(err);
+      }
+
+      const decision = req.body.decision; // "approve" or "deny"
+      const ticket = req.session.authorization.ticket;
+
+      let resultUrl = "";
+
+      if (decision === "approve") {
+        // Call Authlete /authorization/issue API
+        const log = (req as any).logger || logger;
+        log.info("Issuing authorization", {
+          ticket,
+          user: req.session.user,
+          clientId: req.session.authorization.clientId,
+          scopes: req.session.authorization.scopes,
+          clientName: req.session.authorization.clientName,
+        });
+        const response = await authorizationService.issue(req);
+        log.debug("Authorization issue response", { response });
+
+        // Clear session authorization info before sending result
+        delete req.session.authorization;
+
+        // Delegate response handling to the shared helper so the
+        // same action handling logic is used as in the dedicated
+        // authorization-response controller.
+        const { sendAuthorizationIssueResponse } = await import("./authorization-response.handler");
+        return sendAuthorizationIssueResponse(res, response as any);
+      } else {
+        // Call Authlete /authorization/fail API
+        const response = await authorizationService.fail(
+          ticket,
+          "CONSENT_REQUIRED"
+        ); // https://docs.authlete.com/en/shared/latest#post-/api/-serviceId-/auth/authorization
+
+        (req as any).logger?.info("Authorization fail response", { content: response.responseContent });
+        resultUrl = response.responseContent ?? ""; // Authelete returned redirect URI with error
+      }
+
+      // Clear session authorization info
+      delete req.session.authorization;
+
+      return res.redirect(resultUrl);
+    } catch (err) {
+      // Pass all errors to the error handler middleware
+      next(err);
+    }
+  },
+};

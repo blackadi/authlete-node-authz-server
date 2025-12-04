@@ -1,0 +1,79 @@
+<%- include('partials/head.ejs', { title: 'Available Routes' }) %>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Available Routes</h1>
+        <p class="base">Base URL: <code id="base">loading...</code></p>
+      </div>
+    </header>
+    <div class="card_table">
+      <table>
+        <thead>
+          <tr>
+            <th>Method</th>
+            <th>Path</th>
+            <th>Description</th>
+            <th>Example</th>
+          </tr>
+        </thead>
+        <tbody id="routes-body">
+          <tr><td colspan="4" style="padding:20px;color:var(--muted)">Loading routes...</td></tr>
+        </tbody>
+      </table>
+      <footer>Click GET links to open in your browser. Use the copy button to copy curl commands for POST endpoints.</footer>
+    </div>
+  </div>
+  <script>
+    async function load() {
+      try {
+        const res = await fetch('/api/routes.json');
+        const data = await res.json();
+        const base = data.base || (location.protocol + '//' + location.host);
+        document.getElementById('base').textContent = base;
+        const tbody = document.getElementById('routes-body');
+        tbody.innerHTML = '';
+        (data.routes || []).forEach(r => {
+          const full = base + r.path;
+          const tr = document.createElement('tr');
+          const tdMethod = document.createElement('td');
+          tdMethod.innerHTML = `<span class="method">${r.method}</span>`;
+          const tdPath = document.createElement('td');
+          if (r.method === 'GET') {
+            tdPath.innerHTML = `<div class="path"><a href="${full}">${r.path}</a></div>`;
+          } else {
+            tdPath.innerHTML = `<div class="path"><code>${r.path}</code></div>`;
+          }
+          const tdDesc = document.createElement('td');
+          tdDesc.innerHTML = `<div class="desc">${r.description || ''}</div>`;
+          const tdExample = document.createElement('td');
+          let curl = `curl -X ${r.method} ${full}`;
+          if (r.method === 'POST') curl += ` \n  -H \"Content-Type: application/x-www-form-urlencoded\" \n  -d \"...\"`;
+          tdExample.innerHTML = `<div class="curl">${curl.replace(/</g,'&lt;')}</div>`;
+          if (r.method === 'POST') {
+            const btn = document.createElement('button');
+            btn.className = 'copy';
+            btn.textContent = 'Copy';
+            btn.addEventListener('click', () => {
+              navigator.clipboard && navigator.clipboard.writeText(curl).then(()=>{
+                btn.textContent = 'Copied';
+                setTimeout(()=>btn.textContent='Copy',1200);
+              });
+            });
+            tdExample.appendChild(btn);
+          }
+          tr.appendChild(tdMethod);
+          tr.appendChild(tdPath);
+          tr.appendChild(tdDesc);
+          tr.appendChild(tdExample);
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error(err);
+        document.getElementById('routes-body').innerHTML = '<tr><td colspan="4" style="padding:20px;color:#f88">Failed to load routes.json</td></tr>';
+      }
+    }
+    load();
+  </script>
+</body>
+</html>
