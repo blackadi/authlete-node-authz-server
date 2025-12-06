@@ -34,9 +34,7 @@ app.set("views", path.join(__dirname, "views"));
 
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-app.use(cors({
-  origin: 'http://localhost:3001' //Must match your frontend's exact origin
-}));
+app.use(cors());
 // request id middleware (adds `req.id`)
 app.use(requestId());
 
@@ -56,7 +54,18 @@ app.use(
     }
   )
 );
-app.use(bodyParser.urlencoded({ extended: true }));
+// Capture the raw request body for application/x-www-form-urlencoded
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+    verify: (req: any, _res, buf: Buffer, encoding: string) => {
+      const ct = (req.headers && req.headers['content-type']) || '';
+      if (typeof ct === 'string' && ct.indexOf('application/x-www-form-urlencoded') !== -1) {
+        req.rawBody = buf.toString((encoding as BufferEncoding) || 'utf8');
+      }
+    },
+  })
+);
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(

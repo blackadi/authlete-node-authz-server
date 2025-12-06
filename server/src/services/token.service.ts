@@ -1,5 +1,7 @@
 import {
+  TokenFailRequest,
   TokenFailResponse,
+  TokenIssueRequest,
   TokenIssueResponse,
   TokenRequest,
   TokenResponse,
@@ -30,7 +32,7 @@ export class TokenService {
       ...otherBody
     }: TokenRequest = req.body;
 
-    (req as any).logger?.debug("TokenService: received body", {
+    req.logger?.debug("TokenService: received body", {
       clientId,
       otherBody,
     }) ||
@@ -44,30 +46,37 @@ export class TokenService {
         "utf-8"
       );
       [clientId, clientSecret] = credentials.split(":");
-      (req as any).logger?.debug("TokenService: decoded Basic auth", {
+      req.logger?.debug("TokenService: decoded Basic auth", {
         clientId,
       }) ||
         logger.debug("TokenService: decoded Basic auth", { clientId });
     }
 
-    // Build URL-encoded parameter string from all form fields and others
-    const params = new URLSearchParams();
+    // Prefer the raw request body if it was captured by the body parser's
+    // `verify` hook. This preserves exact encoding and parameter order for
+    // Authlete's requirement that `parameters` be the entire
+    // application/x-www-form-urlencoded entity body.
+    let parameters: string | undefined = (req as any).rawBody;
 
-    // Add known TokenRequest fields
-    if (otherBody && typeof otherBody === "object") {
-      for (const [key, value] of Object.entries(otherBody)) {
-        if (value !== undefined && value !== null) {
-          params.append(key, String(value));
+    if (!parameters) {
+      // Fallback: rebuild parameters from parsed body (may reorder/encode
+      // slightly differently than the original entity).
+      const params = new URLSearchParams();
+      if (otherBody && typeof otherBody === "object") {
+        for (const [key, value] of Object.entries(otherBody)) {
+          if (value !== undefined && value !== null) {
+            params.append(key, String(value));
+          }
         }
       }
+      parameters = params.toString();
     }
 
-    const parameters = params.toString();
-
-    (req as any).logger?.debug("TokenService: URL-encoded parameters", {
-      parameters,
-    }) ||
-      logger.debug("TokenService: URL-encoded parameters", { parameters });
+    req.logger?.debug("TokenService: URL-encoded parameters (length), body", {
+      length: parameters.length,
+      body: parameters,
+    }) || logger.debug("TokenService: URL-encoded parameters (length), body", { length: parameters.length, body: parameters });
+    
 
     // Build Authlete TokenRequest
     const reqBody: TokenRequest = {
@@ -89,13 +98,15 @@ export class TokenService {
       refreshTokenDuration,
     } as TokenRequest;
 
-    (req as any).logger?.info("TokenService: calling Authlete token endpoint", {
+    req.logger?.info("TokenService: calling Authlete token endpoint", {
       clientId,
       parametersLength: parameters.length,
+      parameters,
     }) ||
       logger.info("TokenService: calling Authlete token endpoint", {
         clientId,
         parametersLength: parameters.length,
+        parameters,
       });
 
     // Call Authlete /token API
@@ -107,25 +118,19 @@ export class TokenService {
     return response;
   }
 
-  async fail(ticket: string): Promise<TokenFailResponse> {
+  async fail(req: TokenFailRequest): Promise<TokenFailResponse> {
     const response = await authleteApi.token.fail({
       serviceId,
-      tokenFailRequest: {
-        ticket,
-        reason: "INVALID_RESOURCE_OWNER_CREDENTIALS",
-      },
+      tokenFailRequest: req,
     });
 
     return response;
   }
 
-  async issue(ticket: string, subject: string): Promise<TokenIssueResponse> {
+  async issue(req: TokenIssueRequest): Promise<TokenIssueResponse> {
     const response = await authleteApi.token.issue({
       serviceId,
-      tokenIssueRequest: {
-        ticket,
-        subject,
-      },
+      tokenIssueRequest: req,
     });
 
     return response;

@@ -7,7 +7,7 @@ export class UserInfoService {
   async process(req: Request): Promise<UserinfoResponse> {
     const {...reqBody}: UserinfoRequest = req.method === "GET" ? {} : req.body;
 
-    if(req.method === "GET") {
+    if(req.headers["authorization"]) {
       const authHeader = req.headers["authorization"] || "";
       reqBody.token = authHeader.replace("Bearer ", "");
     }
@@ -22,13 +22,12 @@ export class UserInfoService {
     return response;
   }
 
-  async issue(req: any): Promise<UserinfoIssueResponse> {
-    const {...reqBody}: UserinfoIssueRequest = req.body;
-
+  // Accept an explicit UserinfoIssueRequest object instead of assuming req.body
+  async issue(issueRequest: UserinfoIssueRequest): Promise<UserinfoIssueResponse> {
     // Call Authlete /userinfo API to issue user info
     const response = await authleteApi.userinfo.issue({
       serviceId,
-      userinfoIssueRequest: reqBody
+      userinfoIssueRequest: issueRequest,
     });
 
     return response;

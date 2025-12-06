@@ -126,7 +126,7 @@ export const sessionController = {
         // same action handling logic is used as in the dedicated
         // authorization-response controller.
         const { sendAuthorizationIssueResponse } = await import("./authorization-response.handler");
-        return sendAuthorizationIssueResponse(res, response as any);
+        return sendAuthorizationIssueResponse(res, response);
       } else {
         // Call Authlete /authorization/fail API
         const response = await authorizationService.fail(

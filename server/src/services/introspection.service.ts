@@ -8,6 +8,7 @@ export class IntrospectionService {
     (req as any).logger?.debug("Introspection parameters", { reqBody }) ||
       logger.debug("Introspection parameters", { reqBody });
 
+      console.log("Introspection parameters:", reqBody); // For testing only
     // Call Authlete /introspection API
     const response = await authleteApi.introspection.process({
       serviceId,

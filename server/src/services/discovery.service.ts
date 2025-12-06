@@ -12,9 +12,24 @@ export class DiscoveryService {
 
     (req as any).logger?.debug("Discovery parameters", { reqBody }) || logger.debug("Discovery parameters", { reqBody });
     // Call Authlete /authorization API
-    const response = await authleteApi.service.getConfiguration(reqBody);
+    // const response = await authleteApi.service.getConfiguration(reqBody);
 
-    
-    return response;
+    const fetchreq = await fetch(`${process.env.AUTHLETE_BASE_URL}/api/${process.env.AUTHLETE_SERVICE_ID}/service/configuration?pretty=true`, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + process.env.AUTHLETE_ACCESS_TOKEN,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if(!fetchreq.ok){
+      logger.error("Failed to fetch service configuration", { status: fetchreq.status, statusText: fetchreq.statusText });
+      throw new Error(`Failed to fetch service configuration: ${fetchreq.statusText}`);
+    }
+
+    const data = await fetchreq.json();
+
+    return data;
+    // return response;
   }
 }
