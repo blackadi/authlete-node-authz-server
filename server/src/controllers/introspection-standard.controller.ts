@@ -4,35 +4,20 @@ import logger from "../utils/logger";
 
 const introspectionService = new IntrospectionService();
 
-export const introspectionController = {
-  handleIntrospection: async (req: Request, res: Response, next: NextFunction) => {
+//Process OAuth 2.0 Introspection Request
+export const introspectionStandardController = {
+  handleIntrospectionStandard: async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await introspectionService.process(req);
+      const result = await introspectionService.standardprocess(req);
 
       switch (result.action) {
         case "BAD_REQUEST":
-          res.setHeader("WWW-Authenticate", result.responseContent ?? "");
-          res.setHeader("Cache-Control", "no-store");
-          res.setHeader("Pragma", "no-cache");
+          res.setHeader("Content-Type", "application/json")
           return res.status(400).send(result.responseContent ?? "");
 
-        case "UNAUTHORIZED":
-          res.setHeader("WWW-Authenticate", result.responseContent ?? "");
-          res.setHeader("Cache-Control", "no-store");
-          res.setHeader("Pragma", "no-cache");
-          return res.status(401).send(result.responseContent ?? "");
-
         case "INTERNAL_SERVER_ERROR":
-          res.setHeader("WWW-Authenticate", result.responseContent ?? "");
-          res.setHeader("Cache-Control", "no-store");
-          res.setHeader("Pragma", "no-cache");
+          res.setHeader("Content-Type", "application/json")
           return res.status(500).send(result.responseContent ?? "");
-
-        case "FORBIDDEN":
-          res.setHeader("WWW-Authenticate", result.responseContent ?? "");
-          res.setHeader("Cache-Control", "no-store");
-          res.setHeader("Pragma", "no-cache");
-          return res.send(result.responseContent);
 
         case "OK":
           res.setHeader("Content-Type", "application/json");

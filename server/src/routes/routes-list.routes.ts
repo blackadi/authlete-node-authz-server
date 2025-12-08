@@ -8,6 +8,7 @@ const ROUTES: { method: string; path: string; description?: string }[] = [
   { method: "POST", path: "/api/token", description: "Token endpoint" },
   { method: "POST", path: "/api/userinfo", description: "UserInfo (POST)" },
   { method: "POST", path: "/api/introspection", description: "Introspection endpoint" },
+  { method: "POST", path: "/api/introspection/standard", description: "OAuth 2.0 Introspection standard endpoint" },
   { method: "POST", path: "/api/revocation", description: "Revocation endpoint" },
   { method: "GET", path: "/api/session/login", description: "Login page" },
   { method: "POST", path: "/api/session/login", description: "Login submission" },
