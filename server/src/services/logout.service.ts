@@ -11,11 +11,11 @@ export class rpInitiatedLogoutService {
     // Clear session data (destroy session if present)
     try {
       req.session.destroy((err: any) => {
-        if (err) (req as any).logger?.error("Failed to destroy session", { err }) || logger.error("Failed to destroy session", { err });
+        if (err) req.logger?.error("Failed to destroy session", { err }) || logger.error("Failed to destroy session", { err });
       });
     } catch (e) {
       // Some session implementations may throw if already destroyed
-      (req as any).logger?.error("Error destroying session", { err: e }) || logger.error("Error destroying session", { err: e });
+      req.logger?.error("Error destroying session", { err: e }) || logger.error("Error destroying session", { err: e });
     }
 
     // Clear the session cookie
@@ -25,7 +25,7 @@ export class rpInitiatedLogoutService {
         if (Object.hasOwnProperty.call(req.cookies, cookieName)) {
           // Set the path to '/' if all cookies use the default path
           // Adjust options as needed if your cookies use different paths/domains
-          (req as any).logger?.debug("Clearing cookie", { cookieName }) || logger.debug("Clearing cookie", { cookieName });
+          req.logger?.debug("Clearing cookie", { cookieName }) || logger.debug("Clearing cookie", { cookieName });
           res.clearCookie(cookieName, { path: "/api" });
         }
       }

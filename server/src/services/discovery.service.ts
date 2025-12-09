@@ -10,7 +10,7 @@ export class DiscoveryService {
     reqBody.serviceId = serviceId;
     reqBody.pretty = true;
 
-    (req as any).logger?.debug("Discovery parameters", { reqBody }) || logger.debug("Discovery parameters", { reqBody });
+    req.logger?.debug("Discovery parameters", { reqBody }) || logger.debug("Discovery parameters", { reqBody });
     // Call Authlete /authorization API
     // const response = await authleteApi.service.getConfiguration(reqBody);
 

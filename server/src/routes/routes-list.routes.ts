@@ -30,7 +30,7 @@ router.get("/routes.json", (req, res) => {
   const proto = req.protocol;
   const host = req.get("host") || "localhost";
   const base = `${proto}://${host}`;
-  (req as any).logger?.info("routes base url", { base });
+  req.logger?.info("routes base url", { base });
   res.json({ base, routes: ROUTES });
 });
 

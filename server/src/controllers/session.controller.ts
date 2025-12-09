@@ -31,13 +31,13 @@ export const sessionController = {
 
       const loginDecision = req.body.login; // "submit" or "cancel"
       if (loginDecision === "cancel") {
-        const log = (req as any).logger || logger;
+        const log = req.logger || logger;
         log.info("Login canceled for ticket", { ticket: authz?.ticket });
         const response = await authorizationService.fail(
           authz?.ticket ?? "",
           "NOT_LOGGED_IN"
         );
-        (req as any).logger?.info("Login fail response", { content: response.responseContent });
+        req.logger?.info("Login fail response", { content: response.responseContent });
         return res.redirect(response.responseContent ?? "");
       }
 
@@ -59,7 +59,7 @@ export const sessionController = {
 
       // After login, show consent page
       const scopes = authz?.scopes?.join(",") || "";
-      (req as any).logger?.debug("consent scopes", { scopes });
+      req.logger?.debug("consent scopes", { scopes });
       return res.redirect(
         appConfig.consentUrl +
           "?clientId=" +
@@ -108,7 +108,7 @@ export const sessionController = {
 
       if (decision === "approve") {
         // Call Authlete /authorization/issue API
-        const log = (req as any).logger || logger;
+        const log = req.logger || logger;
         log.info("Issuing authorization", {
           ticket,
           user: req.session.user,
@@ -134,7 +134,7 @@ export const sessionController = {
           "CONSENT_REQUIRED"
         ); // https://docs.authlete.com/en/shared/latest#post-/api/-serviceId-/auth/authorization
 
-        (req as any).logger?.info("Authorization fail response", { content: response.responseContent });
+        req.logger?.info("Authorization fail response", { content: response.responseContent });
         resultUrl = response.responseContent ?? ""; // Authelete returned redirect URI with error
       }
 

@@ -15,7 +15,7 @@ export class AuthorizationService {
     // Convert Express request into a query string
     const { context, ...reqBody }: AuthorizationRequest =
       req.method === "GET" ? req.query : req.body;
-    (req as any).logger?.debug("Authorization request parameters", { params: reqBody });
+    req.logger?.debug("Authorization request parameters", { params: reqBody });
     logger.debug("Authorization request parameters", { params: reqBody });
 
     const params = new URLSearchParams();
@@ -75,7 +75,7 @@ export class AuthorizationService {
         throw err;
       }
 
-      (req as any).logger?.info("Issue authorization response parameters", {
+      req.logger?.info("Issue authorization response parameters", {
         ticket,
         subject,
       });

@@ -18,8 +18,8 @@ export function sendTokenFailResponse(res: Response, result: TokenFailResponse) 
           return res.status(400).send(result.responseContent ?? result);
 
         default:
-          // req.logger?.error("Unknown token.fail action", { action: (result as any).action });
-          logger.error("Unknown token.fail action", { action: (result as any).action });
+          // req.logger?.error("Unknown token.fail action", { action: result.action });
+          logger.error("Unknown token.fail action", { action: result.action });
           return res.status(500).send("Unknown token.fail action");
       }
 }

@@ -55,7 +55,7 @@ export const authorizationController = {
       }
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
-      const log = (req as any).logger || logger;
+      const log = req.logger || logger;
       log.error("Authorization controller error", { message: error.message });
       return next(error);
     }

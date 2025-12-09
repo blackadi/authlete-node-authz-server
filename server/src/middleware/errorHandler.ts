@@ -8,7 +8,7 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   // Log error for debugging (use request-scoped logger when available)
-  const log = (req as any).logger || logger;
+  const log = req.logger || logger;
   log.error("Unhandled error", {
     message: err?.message || "Unknown error",
     stack: err?.stack,

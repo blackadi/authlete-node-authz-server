@@ -64,7 +64,7 @@ export const userinfoController = {
           // session user as the subject and synthesize a few fields. Replace
           // this with a real DB lookup in production.
           const subject = result.subject;
-          const claimNames: string[] = (result as any).claims || [];
+          const claimNames: string[] = result.claims || [];
 
           if (!subject) {
             req.logger?.error("Userinfo OK but no subject returned by Authlete", { result });
@@ -159,9 +159,9 @@ export const userinfoController = {
             const { senduserInfoIssueResponse } = await import("./userinfo-issue-response.handler");
             return senduserInfoIssueResponse(res, issueResponse);
 
-            // if ((issueResponse as any).responseContent) {
+            // if (issueResponse.responseContent) {
             //   res.setHeader("Content-Type", "application/json");
-            //   return res.status(200).send((issueResponse as any).responseContent);
+            //   return res.status(200).send(issueResponse.responseContent);
             // }
             // // If no responseContent, return the whole object
             // return res.status(200).send(issueResponse);

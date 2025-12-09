@@ -7,7 +7,7 @@ export class RevocationService {
   async process(req: any): Promise<RevocationResponse> {
 
     const {...reqBody}: RevocationRequest = req.body;
-    (req as any).logger?.debug("Revocation parameters", { reqBody }) || logger.debug("Revocation parameters", { reqBody });
+    req.logger?.debug("Revocation parameters", { reqBody }) || logger.debug("Revocation parameters", { reqBody });
 
     // Call Authlete /introspection API
     const response = await authleteApi.revocation.process({
