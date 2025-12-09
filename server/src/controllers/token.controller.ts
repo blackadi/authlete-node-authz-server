@@ -4,7 +4,6 @@ import { LoginService } from "../services/login.service";
 import session from "express-session";
 import logger from "../utils/logger";
 import { TokenFailRequest, TokenIssueRequest } from "@authlete/typescript-sdk/src/models";
-import { Token } from "@authlete/typescript-sdk/dist/commonjs/sdk/token";
 
 const tokenService = new TokenService();
 const loginService = new LoginService();

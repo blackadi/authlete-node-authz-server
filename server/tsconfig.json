@@ -9,7 +9,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "noCheck": true,
+    // "noCheck": true,
   },
   "include": ["src"]
 }

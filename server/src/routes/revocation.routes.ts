@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { RevocationController } from "../controllers/revocation.controller";
+import { revocationController } from "../controllers/revocation.controller";
 
 const router = Router();
 
-router.post("/revocation", RevocationController.handle);
+router.post("/revocation", revocationController.handleRevocation);
 
 export default router;
