@@ -67,12 +67,13 @@ app.use(
   })
 );
 app.use(bodyParser.json());
+app.set('trust proxy', 1); // Trust Render's proxy
 app.use(cookieParser());
 app.use(
   sessionMiddleware({
     secret: process.env.SESSION_SECRET || "default_secret",
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false
   })
 );
 

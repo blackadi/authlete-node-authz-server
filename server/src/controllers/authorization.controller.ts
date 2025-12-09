@@ -47,7 +47,7 @@ export const authorizationController = {
             scopes: ((typeof req.query.scope === 'string' ? req.query.scope : '').split(/\s+/).filter(Boolean).map(s => s as unknown as Scope)) ?? [],
           };
           // this will log the curl command session info which contains the ticket and user using connect.sid cookie
-          (req as any).logger?.info("TESTING MODE ONLY: curl session cookie", { cookie: req.cookies["connect.sid"] });
+          req.logger?.info("TESTING MODE ONLY: curl session cookie", { cookie: req.cookies["connect.sid"] });
           return res.redirect(appConfig.loginUrl);
 
         default:
