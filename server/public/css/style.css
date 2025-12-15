@@ -24,8 +24,8 @@ body {
 }
 .wrap {
   max-width: 1100px;
-  margin: 28px auto;
-  padding: 24px;
+  margin: 18px auto;
+  padding: 14px;
 }
 header {
   display: flex;
@@ -34,6 +34,10 @@ header {
   margin-bottom: 16px;
 }
 .card_table {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
     width: 100%;
     max-width: 920px;
     background: var(--card);
@@ -49,9 +53,19 @@ header {
     padding: 28px;
     box-shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
 }
+.card_desc {
+    width: 100%;
+    line-height: 2.5;
+    background: var(--card);
+    box-shadow: 0 8px 30px rgba(2, 6, 23, 0.08);
+}
+.card_desc a {
+    color: #0064f0;
+    text-decoration: none;
+}
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
   margin-top: 12px;
 }
 thead th {
@@ -59,6 +73,7 @@ thead th {
   text-align: left;
   padding: 12px;
   font-size: 13px;
+  border: 1px solid rgba(241, 185, 185, 0.107);
   color: var(--muted);
 }
 tbody tr {
@@ -68,6 +83,7 @@ td {
   padding: 12px;
   font-size: 14px;
   vertical-align: middle;
+  border: 1px solid rgba(54, 64, 93, 0.254);
 }
 .method {
   width: 88px;
@@ -75,9 +91,24 @@ td {
   text-transform: uppercase;
   border-radius: 6px;
   padding: 6px 8px;
-  color: var(--text);
-  background: linear-gradient(90deg, var(--accent), #34d399);
+  color: #fff;
+  /* background: linear-gradient(90deg, var(--accent), #34d399); */
 }
+.method.GET {
+  background: linear-gradient(90deg, #2867bf, #054db3);
+}
+
+.method.POST {
+  background: linear-gradient(90deg, #28a745, #1e7e34);
+}
+
+.method.DELETE {
+  background: linear-gradient(90deg, #dc3545, #a71d2a);
+}
+.method.PATCH {
+  background: linear-gradient(90deg, #ffc107, #f59f00);
+}
+
 .path a {
   color: var(--accent2);
   text-decoration: none;
@@ -95,6 +126,15 @@ td {
   color: #9fb3d0;
   display: inline-block;
 }
+.steps {
+  font-family: monospace;
+  background: #071428;
+  padding: 8px;
+  border-radius: 6px;
+  color: #9fb3d0;
+  display: inline-block;
+}
+
 .copy {
   margin-left: 8px;
   background: transparent;
@@ -227,6 +267,16 @@ ul.scopes {
     color: #e6eef6
 }
 
+.link {
+  font-weight: 300;
+  border-radius: 15px;
+  padding: 3px 6px;
+  color: #054db3;
+  text-decoration: none;
+  background: linear-gradient(90deg, #fff, #d2e8e8);;
+}
+
+
 @media (max-width:600px) {
     .card {
         padding: 16px
@@ -241,4 +291,13 @@ ul.scopes {
     .card {
         padding: 18px
     }
+}
+
+.routes-wrapper {
+  flex: 1;
+  overflow-y: auto;
+}
+.routes-scroll {
+  max-height: 420px;
+  overflow-y: auto;
 }

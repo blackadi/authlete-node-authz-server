@@ -3,21 +3,92 @@ import { Router } from "express";
 const router = Router();
 
 const ROUTES: { method: string; path: string; description?: string }[] = [
-  { method: "GET", path: "/api/authorization", description: "Authorization endpoint (GET)" },
-//   { method: "POST", path: "/api/authorization", description: "Authorization endpoint (POST)" },
+  {
+    method: "GET",
+    path: "/api/authorization",
+    description: "Authorization endpoint (GET)",
+  },
+  //   { method: "POST", path: "/api/authorization", description: "Authorization endpoint (POST)" },
   { method: "POST", path: "/api/token", description: "Token endpoint" },
   { method: "POST", path: "/api/userinfo", description: "UserInfo (POST)" },
-  { method: "POST", path: "/api/introspection", description: "Introspection endpoint" },
-  { method: "POST", path: "/api/introspection/standard", description: "OAuth 2.0 Introspection standard endpoint" },
-  { method: "POST", path: "/api/revocation", description: "Revocation endpoint" },
+  {
+    method: "POST",
+    path: "/api/introspection",
+    description: "Introspection endpoint",
+  },
+  {
+    method: "POST",
+    path: "/api/introspection/standard",
+    description: "OAuth 2.0 Introspection standard endpoint",
+  },
+  {
+    method: "POST",
+    path: "/api/revocation",
+    description: "Revocation endpoint",
+  },
   { method: "GET", path: "/api/session/login", description: "Login page" },
-  { method: "POST", path: "/api/session/login", description: "Login submission" },
+  {
+    method: "POST",
+    path: "/api/session/login",
+    description: "Login submission",
+  },
   { method: "GET", path: "/api/session/consent", description: "Consent page" },
-  { method: "POST", path: "/api/session/consent", description: "Consent submission" },
+  {
+    method: "POST",
+    path: "/api/session/consent",
+    description: "Consent submission",
+  },
   { method: "GET", path: "/api/.well-known/jwks.json", description: "JWKS" },
-  { method: "GET", path: "/api/.well-known/openid-configuration", description: "OpenID Configuration" },
-  { method: "GET", path: "/api/logout", description: "RP-initiated logout (front-channel redirect)" },
-  { method: "POST", path: "/api/backchannel_logout", description: "OP-initiated backchannel logout" },
+  {
+    method: "GET",
+    path: "/api/.well-known/openid-configuration",
+    description: "OpenID Configuration",
+  },
+  {
+    method: "GET",
+    path: "/api/token/list",
+    description: "Tokens list endpoint",
+  },
+  {
+    method: "POST",
+    path: "/api/token/create",
+    description: "Token creation endpoint",
+  },
+  {
+    method: "PATCH",
+    path: "/api/token/update",
+    description: "Token update endpoint",
+  },
+  {
+    method: "DELETE",
+    path: "/api/token/delete",
+    description: "Token deletion endpoint",
+  },
+  {
+    method: "POST",
+    path: "/api/token/revoke",
+    description: "Token revocation endpoint",
+  },
+  {
+    method: "POST",
+    path: "/api/token/reissue",
+    description: "Token reissue endpoint",
+  },
+  {
+    method: "GET",
+    path: "/api/token/createLocalToken",
+    description: "Local JWT creation endpoint",
+  },
+  {
+    method: "GET",
+    path: "/api/logout",
+    description: "RP-initiated logout (front-channel redirect)",
+  },
+  {
+    method: "POST",
+    path: "/api/backchannel_logout",
+    description: "OP-initiated backchannel logout",
+  },
 ];
 
 // Serve static HTML view from src/views
@@ -30,7 +101,7 @@ router.get("/routes.json", (req, res) => {
   const proto = req.protocol;
   const host = req.get("host") || "localhost";
   const base = `${proto}://${host}`;
-  req.logger?.info("routes base url", { base });
+  req.logger("routes base url", { base });
   res.json({ base, routes: ROUTES });
 });
 

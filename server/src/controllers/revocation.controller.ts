@@ -4,11 +4,12 @@ import logger from "../utils/logger";
 
 const introspectionService = new RevocationService();
 
+
 export const revocationController = {
   handleRevocation: async(req: Request, res: Response, next: NextFunction) => {
     try{
       const result = await introspectionService.process(req);
-      
+
       switch (result.action) {
         case "OK":
           // Token revoked successfully OR request was valid.
@@ -50,5 +51,6 @@ export const revocationController = {
       logger.error("Revocation Response Error", { message: error.message });
       return next(error);
     }
+    
   }
 }

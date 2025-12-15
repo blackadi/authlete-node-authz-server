@@ -24,7 +24,9 @@ export const sessionController = {
       // Must have ticket from OAuth2 authorization request
       const authz = req.session.authorization;
       if (!authz || !authz.ticket) {
-        const err = new Error("Missing authorization context - session not found");
+        const err = new Error(
+          "Missing authorization context - session not found"
+        );
         (err as any).status = 401;
         return next(err);
       }
@@ -37,7 +39,9 @@ export const sessionController = {
           authz?.ticket ?? "",
           "NOT_LOGGED_IN"
         );
-        req.logger?.info("Login fail response", { content: response.responseContent });
+        req.logger("Login fail response", {
+          content: response.responseContent,
+        });
         return res.redirect(response.responseContent ?? "");
       }
 
@@ -59,7 +63,7 @@ export const sessionController = {
 
       // After login, show consent page
       const scopes = authz?.scopes?.join(",") || "";
-      req.logger?.debug("consent scopes", { scopes });
+      req.logger("consent scopes", { scopes });
       return res.redirect(
         appConfig.consentUrl +
           "?clientId=" +
@@ -82,8 +86,8 @@ export const sessionController = {
     // Show the consent UI
     if (!req.session.user || !req.session.authorization) {
       const err = new Error("Unauthorized - no ticket in session");
-        (err as any).status = 403;
-        return next(err);
+      (err as any).status = 403;
+      return next(err);
     }
     const { clientName = "", scopes = [] } = req.session.authorization || {};
     res.render("consent", { clientName, scopes });
@@ -125,7 +129,9 @@ export const sessionController = {
         // Delegate response handling to the shared helper so the
         // same action handling logic is used as in the dedicated
         // authorization-response controller.
-        const { sendAuthorizationIssueResponse } = await import("./authorization-response.handler");
+        const { sendAuthorizationIssueResponse } = await import(
+          "./authorization-response.handler"
+        );
         return sendAuthorizationIssueResponse(res, response);
       } else {
         // Call Authlete /authorization/fail API
@@ -134,7 +140,9 @@ export const sessionController = {
           "CONSENT_REQUIRED"
         ); // https://docs.authlete.com/en/shared/latest#post-/api/-serviceId-/auth/authorization
 
-        req.logger?.info("Authorization fail response", { content: response.responseContent });
+        req.logger("Authorization fail response", {
+          content: response.responseContent,
+        });
         resultUrl = response.responseContent ?? ""; // Authelete returned redirect URI with error
       }
 

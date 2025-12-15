@@ -5,9 +5,8 @@ import logger from "../utils/logger";
 const jwksService = new JwksService();
 
 export const jwksController = {
-  handle: async(req: Request, res: Response, next: NextFunction) => {
+  handle: async (req: Request, res: Response, next: NextFunction) => {
     try {
-
       const result = await jwksService.serviceJwksGetApi();
 
       res.status(200).send(result);
@@ -16,5 +15,5 @@ export const jwksController = {
       logger.error("JWKS Response Error", { message: error.message });
       return next(error);
     }
-  }
-}
+  },
+};

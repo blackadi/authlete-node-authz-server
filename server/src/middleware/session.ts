@@ -1,4 +1,5 @@
 import dotenv from "dotenv";
+import { server } from "../config/app.config";
 
 const session = require("express-session");
 
@@ -7,11 +8,11 @@ dotenv.config();
 const defaultCookie: any = {
   httpOnly: true,
   sameSite: "lax",
-  secure: process.env.NODE_ENV === "production",
+  secure: server.nodeEnv === "production",
   maxAge: 1000 * 60 * 30, // 30 minutes
 };
 const defaultOptions: any = {
-  secret: process.env.SESSION_SECRET || "change_this_secret",
+  secret: server.sessionSecret,
   resave: false,
   saveUninitialized: false, // Change to true so sessions are saved even if empty
   cookie: defaultCookie,

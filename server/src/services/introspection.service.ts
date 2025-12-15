@@ -1,13 +1,18 @@
 import { Request } from "express";
 import { authleteApi, serviceId } from "./authlete.service";
 import logger from "../utils/logger";
-import { IntrospectionRequest, IntrospectionResponse, StandardIntrospectionRequest, StandardIntrospectionResponse } from "../../node_modules/@authlete/typescript-sdk/dist/commonjs/models";
+import {
+  IntrospectionRequest,
+  IntrospectionResponse,
+  StandardIntrospectionRequest,
+  StandardIntrospectionResponse,
+} from "../../node_modules/@authlete/typescript-sdk/dist/commonjs/models";
 
 export class IntrospectionService {
   async process(req: Request): Promise<IntrospectionResponse> {
     const { ...reqBody }: IntrospectionRequest = req.body;
-    req.logger?.debug("Introspection parameters", { reqBody }) ||
-      logger.debug("Introspection parameters", { reqBody });
+    req.logger("Introspection parameters", { reqBody }) ||
+      logger("Introspection parameters", { reqBody });
 
     // Call Authlete /introspection API
     const response = await authleteApi.introspection.process({
@@ -33,15 +38,14 @@ export class IntrospectionService {
       ...otherBody
     }: StandardIntrospectionRequest = req.body;
 
-    req.logger?.debug(
-      "StandardIntrospectionService: received body",
-      { withHiddenProperties, otherBodyKeys: Object.keys(otherBody || {}) }
-    ) ||
-      logger.debug("StandardIntrospectionService: received body", {
+    req.logger("StandardIntrospectionService: received body", {
+      withHiddenProperties,
+      otherBodyKeys: Object.keys(otherBody || {}),
+    }) ||
+      logger("StandardIntrospectionService: received body", {
         withHiddenProperties,
         otherBodyKeys: Object.keys(otherBody || {}),
       });
-
 
     // Decode Basic auth if present
     const { authorization } = req.headers;
@@ -52,10 +56,9 @@ export class IntrospectionService {
         "utf-8"
       );
       [clientId, clientSecret] = credentials.split(":");
-      req.logger?.debug("TokenService: decoded Basic auth", {
+      req.logger("TokenService: decoded Basic auth", {
         clientId,
-      }) ||
-        logger.debug("TokenService: decoded Basic auth", { clientId });
+      }) || logger("TokenService: decoded Basic auth", { clientId });
     }
 
     // Convert remaining fields to application/x-www-form-urlencoded
@@ -74,14 +77,13 @@ export class IntrospectionService {
       params.append("client_id", clientId);
       params.append("client_secret", clientSecret);
     }
-    
+
     const parameters = params.toString();
 
-    req.logger?.debug(
-      "StandardIntrospectionService: URL-encoded parameters",
-      { parameters }
-    ) ||
-      logger.debug("StandardIntrospectionService: URL-encoded parameters", {
+    req.logger("StandardIntrospectionService: URL-encoded parameters", {
+      parameters,
+    }) ||
+      logger("StandardIntrospectionService: URL-encoded parameters", {
         parameters,
       });
 
@@ -107,4 +109,3 @@ export class IntrospectionService {
     return response;
   }
 }
-

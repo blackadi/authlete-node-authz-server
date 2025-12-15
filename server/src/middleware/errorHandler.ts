@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import logger from "../utils/logger";
+import { server } from "../config/app.config";
 
 export const errorHandler = (
   err: Error | any,
@@ -19,7 +20,7 @@ export const errorHandler = (
   // Extract status code (default to 500)
   const status = err?.status || err?.statusCode || 500;
   const message = err?.message || "Internal Server Error";
-  const isDevelopment = process.env.NODE_ENV === "development";
+  const isDevelopment = server.nodeEnv === "development";
 
   // Check if client wants HTML (Accept header) or API response
   if (req.accepts("html")) {

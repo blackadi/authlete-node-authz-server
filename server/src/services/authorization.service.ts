@@ -15,8 +15,8 @@ export class AuthorizationService {
     // Convert Express request into a query string
     const { context, ...reqBody }: AuthorizationRequest =
       req.method === "GET" ? req.query : req.body;
-    req.logger?.debug("Authorization request parameters", { params: reqBody });
-    logger.debug("Authorization request parameters", { params: reqBody });
+    req.logger("Authorization request parameters", { params: reqBody });
+    logger("Authorization request parameters", { params: reqBody });
 
     const params = new URLSearchParams();
 
@@ -75,11 +75,14 @@ export class AuthorizationService {
         throw err;
       }
 
-      req.logger?.info("Issue authorization response parameters", {
+      req.logger("Issue authorization response parameters", {
         ticket,
         subject,
       });
-      logger.info("Issue authorization response parameters", { ticket, subject });
+      logger("Issue authorization response parameters", {
+        ticket,
+        subject,
+      });
 
       const optionalClaims =
         '{"name": "Odai Shalabi","email": "blackadi@blackadi.dev","email_verified": true,"picture": "https://lh3.googleusercontent.com/a/ACg8ocKxOjqZ-NPCUuRAOATIfXjeNrawMCtk6xHBKHJagUKPEURfHWno=s288-c-no"}';

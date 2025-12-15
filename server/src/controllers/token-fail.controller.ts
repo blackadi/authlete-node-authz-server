@@ -16,10 +16,13 @@ export const tokenFailController = {
 
       if (!failRequest.ticket) {
         req.logger?.warn("token/fail called without ticket");
-        return res.status(400).json({ error: "invalid_request", error_description: "ticket is required" });
+        return res.status(400).json({
+          error: "invalid_request",
+          error_description: "ticket is required",
+        });
       }
 
-      req.logger?.info("Calling Authlete /api/token/fail", { failRequest });
+      req.logger("Calling Authlete /api/token/fail", { failRequest });
 
       const result = await tokenService.fail(failRequest);
 

@@ -1,16 +1,87 @@
 <%- include('partials/head', { title: 'Default Page' }) %>
-<body>
-  <div class="card">
-    <h1><%= title || 'Default' %></h1>
-    <label><p class="lead">Query Parameters</p></label>
-    <p class="base"><strong>code:</strong> <i><%= code || 'Cannot read code.' %></i></p>
-    <p class="base"><strong>state:</strong> <i><%= state || 'Cannot read code.' %></i></p>
-    <p class="base"><strong>iss:</strong> <i><%= iss || 'Cannot read code.' %></i></p>
 
-    <% if (code !== "No code provided") { %>
-      <div class="foot"><p class="base">Next, exchange the authorization code for a token using your client or any REST tool like cURL or Postman.</p></div>
-    <% } %>
-    
-  </div>
-</body>
-</html>
+  <body>
+    <div class="card_table">
+      <h1>
+        <%= title || 'Default' %>
+      </h1>
+
+      <% if (code &&code !=="No code provided" ) { %>
+        <label>
+          <p class="lead">Query Parameters</p>
+        </label>
+        <p class="base"><strong>code:</strong> <i>
+            <%= code || 'Cannot read code.' %>
+          </i></p>
+        <p class="base"><strong>state:</strong> <i>
+            <%= state || 'Cannot read code.' %>
+          </i></p>
+        <p class="base"><strong>iss:</strong> <i>
+            <%= iss || 'Cannot read code.' %>
+          </i></p>
+        <div class="foot">
+          <p class="base">Next, exchange the authorization code for a token using your client or any REST tool like cURL
+            or Postman.</p>
+        </div>
+
+        <% } else { %>
+          <h1>
+            <p class="lead">Authorization server supporting OAuth 2.0 & OpenID Connect, powered by <a
+                href="https://authlete.com" class="method GET"
+                style="display:inline-block;margin-right:8px;">Authlete</a>. </p>
+          </h1>
+          <!-- render routers.ejs here -->
+           <div class="routes-wrapper">
+             <%- include('routes') %>
+           </div>
+            <table>
+              <tbody id="routes-body">
+                <thead>
+                  <th>Management Console</th>
+                  <td><a class="link" href="https://console.authlete.com/register">https://console.authlete.com/register</a></td>
+                </thead>
+                <thead>
+                  <th>Source Code</th>
+                  <td><a
+                      class="link"
+                      href="https://github.com/blackadi/authlete-node-authz-server">https://github.com/blackadi/authlete-node-authz-server</a>
+                  </td>
+                </thead>
+                <thead>
+                  <th>Libraries</th>
+                  <td>
+                    <a class="link" href="https://github.com/authlete/authlete-typescript-sdk">https://github.com/authlete/authlete-typescript-sdk
+                    </a>
+                  </td>
+                </thead>
+              </tbody>
+            </table>
+            <div class="card_desc">
+              <ol>
+                <li><a href="https://www.authlete.com/">Authlete</a> is an OAuth 2.0 & OpenID Connect implementation on cloud (<a herf="https://www.authlete.com/developers/overview/">overview</a>).</li>
+                <li>This authorization server is written using Authlete's open source libraries.</li>
+                <li>This authorization server is DB-less because authorization data are stored on cloud.
+                </li>
+                <li>You can manage settings of authorization servers by <a href="https://console.authlete.com/">Service Owner Console</a> (<a href="https://www.authlete.com/developers/so_console/">document</a>).</li>
+                <li>You can manage settings of client applications by Developer Console (<a href="https://www.authlete.com/developers/getting_started/">document</a>).</li>
+              </ol>
+            </div>
+            <div class="foot" style="text-align: left;">
+              <p class="base">
+                <strong>Steps to get started:</strong>
+              <ol class="steps">
+                <li>Use your client to request authorization from the authorization server.</li>
+                <li>Receive an authorization code.</li>
+                <li>Exchange the authorization code for a token using your client or any REST tool like cURL or Postman.
+                </li>
+                <li>Use the token to access protected resources.</li>
+                <li>Refresh the token when it expires.</li>
+              </ol>
+              </p>
+            </div>
+
+            <% } %>
+    </div>
+  </body>
+
+  </html>

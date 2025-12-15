@@ -10,12 +10,14 @@ import logger from "../utils/logger";
 const authorizationService = new AuthorizationService();
 
 export const authorizationController = {
-  handleAuthorization: async (req: Request & { session: Partial<session.SessionData> }, res: Response, next: NextFunction) => {
+  handleAuthorization: async (
+    req: Request & { session: Partial<session.SessionData> },
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
-        
       const result = await authorizationService.process(req);
-        
-      
+
       switch (result.action) {
         case "BAD_REQUEST":
           return res.status(400).send(result.responseContent);
@@ -24,8 +26,8 @@ export const authorizationController = {
           return res.status(500).send(result.responseContent);
 
         case "LOCATION":
-            res.setHeader("Location", result.responseContent??"");
-          return res.redirect(result.responseContent??"");
+          res.setHeader("Location", result.responseContent ?? "");
+          return res.redirect(result.responseContent ?? "");
 
         case "FORM":
           res.setHeader("Content-Type", "text/html;charset=UTF-8");
@@ -34,7 +36,7 @@ export const authorizationController = {
           return res.status(200).send(result.responseContent);
 
         case "NO_INTERACTION":
-          return res.redirect(result.responseContent??"");
+          return res.redirect(result.responseContent ?? "");
 
         case "INTERACTION":
           // console.log("test", (req.query.scope || '').split(/\s+/).filter(Boolean));
@@ -44,10 +46,16 @@ export const authorizationController = {
             ticket: result.ticket ?? "",
             clientId: result.client?.clientId ?? 0,
             clientName: result.client?.clientName ?? "",
-            scopes: ((typeof req.query.scope === 'string' ? req.query.scope : '').split(/\s+/).filter(Boolean).map(s => s as unknown as Scope)) ?? [],
+            scopes:
+              (typeof req.query.scope === "string" ? req.query.scope : "")
+                .split(/\s+/)
+                .filter(Boolean)
+                .map((s) => s as unknown as Scope) ?? [],
           };
           // this will log the curl command session info which contains the ticket and user using connect.sid cookie
-          req.logger?.info("TESTING MODE ONLY: curl session cookie", { cookie: req.cookies["connect.sid"] });
+          req.logger("TESTING MODE ONLY: curl session cookie", {
+            cookie: req.cookies["connect.sid"],
+          });
           return res.redirect(appConfig.loginUrl);
 
         default:

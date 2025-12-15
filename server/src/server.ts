@@ -1,8 +1,9 @@
 import { app } from "./app";
 import logger from "./utils/logger";
+import { server } from "./config/app.config";
 
-const PORT = process.env.PORT || 8080;
+const PORT = server.port;
 
 app.listen(PORT, () => {
-  logger.info(`Authorization Server running on port ${PORT}`);
+  logger(`Authorization Server running on port ${PORT}`);
 });

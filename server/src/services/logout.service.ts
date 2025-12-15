@@ -11,11 +11,14 @@ export class rpInitiatedLogoutService {
     // Clear session data (destroy session if present)
     try {
       req.session.destroy((err: any) => {
-        if (err) req.logger?.error("Failed to destroy session", { err }) || logger.error("Failed to destroy session", { err });
+        if (err)
+          req.logger?.error("Failed to destroy session", { err }) ||
+            logger.error("Failed to destroy session", { err });
       });
     } catch (e) {
       // Some session implementations may throw if already destroyed
-      req.logger?.error("Error destroying session", { err: e }) || logger.error("Error destroying session", { err: e });
+      req.logger?.error("Error destroying session", { err: e }) ||
+        logger.error("Error destroying session", { err: e });
     }
 
     // Clear the session cookie
@@ -25,7 +28,8 @@ export class rpInitiatedLogoutService {
         if (Object.hasOwnProperty.call(req.cookies, cookieName)) {
           // Set the path to '/' if all cookies use the default path
           // Adjust options as needed if your cookies use different paths/domains
-          req.logger?.debug("Clearing cookie", { cookieName }) || logger.debug("Clearing cookie", { cookieName });
+          req.logger("Clearing cookie", { cookieName }) ||
+            logger("Clearing cookie", { cookieName });
           res.clearCookie(cookieName, { path: "/api" });
         }
       }
@@ -37,7 +41,7 @@ export class rpInitiatedLogoutService {
     // which would cause a redirect loop. The route handler for GET /api/logout should render
     // the same `logout` view when necessary; here we render the view directly.
     const { codeVerifier, codeChallenge } = await createPkcePair();
-    
+
     return res.render("logout", {
       state: randomString(32),
       nonce: randomString(32),
@@ -46,7 +50,7 @@ export class rpInitiatedLogoutService {
       code_challenge_method: "S256",
       client_id: "YOUR_CLIENT_ID_HERE",
       redirect_uri: "http://localhost:3000",
-      scope: "openid email profile"
+      scope: "openid email profile",
     });
   }
 }

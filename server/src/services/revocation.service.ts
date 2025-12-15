@@ -1,12 +1,13 @@
-
 import { Request } from "express";
-import { RevocationResponse, RevocationRequest } from "../../node_modules/@authlete/typescript-sdk/dist/commonjs/models";
+import {
+  RevocationResponse,
+  RevocationRequest,
+} from "../../node_modules/@authlete/typescript-sdk/dist/commonjs/models";
 import { authleteApi, serviceId } from "./authlete.service";
 import logger from "../utils/logger";
 
 export class RevocationService {
   async process(req: Request): Promise<RevocationResponse> {
-
     let {
       clientCertificate,
       clientCertificatePath,
@@ -16,7 +17,8 @@ export class RevocationService {
       oauthClientAttestationPop,
       ...otherBody
     }: RevocationRequest = req.body;
-    req.logger?.debug("Revocation parameters", { otherBody }) || logger.debug("Revocation parameters", { otherBody });
+    req.logger("Revocation parameters", { otherBody }) ||
+      logger("Revocation parameters", { otherBody });
 
     //
     let parameters: string | undefined = (req as any).rawBody;
@@ -32,14 +34,18 @@ export class RevocationService {
           }
         }
       }
+
       parameters = params.toString();
     }
 
-    req.logger?.debug("RevocationService: URL-encoded parameters (length), body", {
+    req.logger("RevocationService: URL-encoded parameters (length), body", {
       length: parameters.length,
       body: parameters,
-    }) || logger.debug("RevocationService: URL-encoded parameters (length), body", { length: parameters.length, body: parameters });
-    
+    }) ||
+      logger("RevocationService: URL-encoded parameters (length), body", {
+        length: parameters.length,
+        body: parameters,
+      });
 
     // Build Authlete TokenRequest
     const reqBody: RevocationRequest = {
@@ -49,15 +55,15 @@ export class RevocationService {
       clientId,
       clientSecret,
       oauthClientAttestation,
-      oauthClientAttestationPop
+      oauthClientAttestationPop,
     } as RevocationRequest;
 
-    req.logger?.info("RevocationService: calling Authlete revocation endpoint", {
+    req.logger("RevocationService: calling Authlete revocation endpoint", {
       clientId,
       parametersLength: parameters.length,
       parameters,
     }) ||
-      logger.info("RevocationService: calling Authlete revocation endpoint", {
+      logger("RevocationService: calling Authlete revocation endpoint", {
         clientId,
         parametersLength: parameters.length,
         parameters,
@@ -74,16 +80,15 @@ export class RevocationService {
       [clientId, clientSecret] = credentials.split(":");
       reqBody.clientId = clientId;
       reqBody.clientSecret = clientSecret;
-      req.logger?.debug("RevocationService: decoded Basic auth", {
+      req.logger("RevocationService: decoded Basic auth", {
         clientId,
-      }) ||
-        logger.debug("RevocationService: decoded Basic auth", { clientId });
+      }) || logger("RevocationService: decoded Basic auth", { clientId });
     }
 
     // Call Authlete /introspection API
     const response = await authleteApi.revocation.process({
       serviceId,
-      revocationRequest: reqBody
+      revocationRequest: reqBody,
     });
 
     return response;

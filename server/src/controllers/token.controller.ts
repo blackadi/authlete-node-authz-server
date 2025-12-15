@@ -1,15 +1,31 @@
 import { NextFunction, Request, Response } from "express";
 import { TokenService } from "../services/token.service";
+import { TokenManagementService } from "../services/token.operations.service";
 import { LoginService } from "../services/login.service";
 import session from "express-session";
 import logger from "../utils/logger";
-import { TokenFailRequest, TokenIssueRequest } from "@authlete/typescript-sdk/src/models";
+import {
+  TokenCreateRequest,
+  TokenFailRequest,
+  TokenIssueRequest,
+} from "@authlete/typescript-sdk/src/models";
+import { handleTokenExchange } from "./token-exchange-response.handler";
+import { jwks, jwt } from "../config/authlete.config";
+import {
+  validateJwtAssertionWithJwks,
+  JwtValidationResult,
+} from "../utils/jwtAssertionValidator";
 
 const tokenService = new TokenService();
 const loginService = new LoginService();
+const tokenManagementService = new TokenManagementService();
 
 export const tokenController = {
-  handleToken: async (req: Request & { session: Partial<session.SessionData> }, res: Response, next: NextFunction) => {
+  handleToken: async (
+    req: Request & { session: Partial<session.SessionData> },
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
       const result = await tokenService.process(req);
 
@@ -39,16 +55,65 @@ export const tokenController = {
           return res.status(500).send(result.responseContent ?? result);
 
         case "JWT_BEARER":
-          res.setHeader("Content-Type", "application/json");
-          res.setHeader("Cache-Control", "no-store");
-          res.setHeader("Pragma", "no-cache");
-          const data = {
-            access_token: result.accessToken,
-            token_type: "bearer",
-            expires_in: result.accessTokenExpiresAt,
-            scope: result.scopes,
-          };
-          return res.send(data);
+          const assertion = result.assertion;
+          if (!assertion) {
+            return res.status(400).json({
+              error: "invalid_request",
+              error_description: "Missing assertion",
+            });
+          }
+
+          const jwksUri =
+            jwks.uri ||
+            "https://authlete-node-authz-server.onrender.com/api/.well-known/jwks.json";
+
+          // Validate JWT using JWKS
+          const { valid, payload, error } = await validateJwtAssertionWithJwks(
+            assertion,
+            jwksUri
+          );
+
+          if (!valid) {
+            logger.error("JWT assertion validation failed:", error);
+            return res.status(400).json({
+              error: "invalid_request",
+              error_description: "Invalid assertion",
+            });
+          }
+
+          const subject = payload!.sub;
+          const issuer = payload!.iss;
+          const audience = payload!.aud;
+
+          // Build Authlete TokenCreateRequest
+          const createRequest = {
+            grantType: "JWT_BEARER",
+            subject,
+            clientId: result.clientId,
+            issuer,
+            audience: Array.isArray(audience) ? audience : [audience],
+            scopes: result.scopes,
+          } as TokenCreateRequest;
+
+          const createResp = await tokenManagementService.create(createRequest);
+
+          switch (createResp.action) {
+            case "OK":
+              res.setHeader("Content-Type", "application/json");
+              return res.status(200).send({ createResp });
+            case "BAD_REQUEST":
+              res.setHeader("Content-Type", "application/json");
+              return res.status(400).send({ createResp });
+            case "FORBIDDEN":
+              res.setHeader("Content-Type", "application/json");
+              res.status(403).send({ createResp });
+            default:
+              res.setHeader("Content-Type", "application/json");
+              return res.status(500).send({
+                error: "server_error",
+                error_description: "Token creation returned unknown action",
+              });
+          }
 
         case "OK":
           res.setHeader("Content-Type", "application/json");
@@ -75,10 +140,15 @@ export const tokenController = {
             const user = await loginService.validateUser(username, password);
             if (!user) {
               // invalid credentials -> call Authlete /auth/token/fail
-              const reqFail: TokenFailRequest = { ticket, reason: "INVALID_RESOURCE_OWNER_CREDENTIALS" };
+              const reqFail: TokenFailRequest = {
+                ticket,
+                reason: "INVALID_RESOURCE_OWNER_CREDENTIALS",
+              };
               const failResp = await tokenService.fail(reqFail);
 
-              const { sendTokenFailResponse } = await import("./token-fail-response.handler");
+              const { sendTokenFailResponse } = await import(
+                "./token-fail-response.handler"
+              );
               return sendTokenFailResponse(res, failResp);
               // res.setHeader("Content-Type", "application/json");
               // res.setHeader("Cache-Control", "no-store");
@@ -87,10 +157,15 @@ export const tokenController = {
             }
 
             // valid credentials -> issue token using ticket and subject
-            const issueReq: TokenIssueRequest = { ticket, subject: user.subject };
+            const issueReq: TokenIssueRequest = {
+              ticket,
+              subject: user.subject,
+            };
             const issueResp = await tokenService.issue(issueReq);
 
-            const { sendTokenIssueResponse } = await import("./token-issue-response.handler");
+            const { sendTokenIssueResponse } = await import(
+              "./token-issue-response.handler"
+            );
             return sendTokenIssueResponse(res, issueResp);
 
             // res.setHeader("Content-Type", "application/json");
@@ -99,19 +174,22 @@ export const tokenController = {
             // return res.status(200).send((issueResp).responseContent ?? issueResp);
           } catch (e) {
             const err = e instanceof Error ? e : new Error(String(e));
-            req.logger?.error("Password grant handling failed", { message: err.message });
-            logger.error("Password grant handling failed", { message: err.message });
+            req.logger?.error("Password grant handling failed", {
+              message: err.message,
+            });
+            logger.error("Password grant handling failed", {
+              message: err.message,
+            });
             res.setHeader("Content-Type", "application/json");
             res.setHeader("Cache-Control", "no-store");
             res.setHeader("Pragma", "no-cache");
-            return res.status(500).send({ error: "server_error", error_description: err.message });
+            return res
+              .status(500)
+              .send({ error: "server_error", error_description: err.message });
           }
 
         case "TOKEN_EXCHANGE":
-          res.setHeader("Content-Type", "application/json");
-          res.setHeader("Cache-Control", "no-cache, no-store");
-          res.setHeader("Pragma", "no-cache");
-          return res.status(200).send(result.responseContent ?? result);
+          return handleTokenExchange(res, result, next);
 
         default:
           req.logger?.error("Unknown token action", { action: result.action });
@@ -124,5 +202,5 @@ export const tokenController = {
       log.error("Token Response Error", { message: error.message });
       return next(error);
     }
-  }
+  },
 };

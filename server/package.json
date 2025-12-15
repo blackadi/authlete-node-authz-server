@@ -6,7 +6,8 @@
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
     "build": "tsc",
     "postbuild": "cp -r public dist/public && cp -r images dist/images && cp -r src/views dist/views",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "createLocalToken": "ts-node-dev --respawn --transpile-only src/utils/createLocalJWT.ts"
   },
   "dependencies": {
     "@authlete/typescript-sdk": "^0.0.3-beta",
@@ -18,6 +19,9 @@
     "express": "^4.18.0",
     "express-request-id": "^3.0.0",
     "express-session": "^1.17.3",
+    "jsonwebtoken": "^9.0.3",
+    "jwk-to-pem": "^2.0.7",
+    "jwks-rsa": "^3.2.0",
     "morgan": "^1.10.1",
     "winston": "^3.18.3",
     "winston-daily-rotate-file": "^5.0.0"
@@ -27,6 +31,8 @@
     "@types/cors": "^2.8.19",
     "@types/express": "^4.17.17",
     "@types/express-session": "^1.17.7",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/jwk-to-pem": "^2.0.3",
     "@types/morgan": "^1.9.10",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.0.4"

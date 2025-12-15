@@ -32,11 +32,10 @@ export class TokenService {
       ...otherBody
     }: TokenRequest = req.body;
 
-    req.logger?.debug("TokenService: received body", {
+    req.logger("TokenService: received body", {
       clientId,
       otherBody,
-    }) ||
-      logger.debug("TokenService: received body", { clientId, otherBody });
+    }) || logger("TokenService: received body", { clientId, otherBody });
 
     // Decode Basic auth if present
     const { authorization } = req.headers;
@@ -46,10 +45,9 @@ export class TokenService {
         "utf-8"
       );
       [clientId, clientSecret] = credentials.split(":");
-      req.logger?.debug("TokenService: decoded Basic auth", {
+      req.logger("TokenService: decoded Basic auth", {
         clientId,
-      }) ||
-        logger.debug("TokenService: decoded Basic auth", { clientId });
+      }) || logger("TokenService: decoded Basic auth", { clientId });
     }
 
     // Prefer the raw request body if it was captured by the body parser's
@@ -72,11 +70,14 @@ export class TokenService {
       parameters = params.toString();
     }
 
-    req.logger?.debug("TokenService: URL-encoded parameters (length), body", {
+    req.logger("TokenService: URL-encoded parameters (length), body", {
       length: parameters.length,
       body: parameters,
-    }) || logger.debug("TokenService: URL-encoded parameters (length), body", { length: parameters.length, body: parameters });
-    
+    }) ||
+      logger("TokenService: URL-encoded parameters (length), body", {
+        length: parameters.length,
+        body: parameters,
+      });
 
     // Build Authlete TokenRequest
     const reqBody: TokenRequest = {
@@ -98,12 +99,12 @@ export class TokenService {
       refreshTokenDuration,
     } as TokenRequest;
 
-    req.logger?.info("TokenService: calling Authlete token endpoint", {
+    req.logger("TokenService: calling Authlete token endpoint", {
       clientId,
       parametersLength: parameters.length,
       parameters,
     }) ||
-      logger.info("TokenService: calling Authlete token endpoint", {
+      logger("TokenService: calling Authlete token endpoint", {
         clientId,
         parametersLength: parameters.length,
         parameters,
