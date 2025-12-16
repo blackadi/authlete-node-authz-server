@@ -58,3 +58,70 @@
 2025-12-16T06:25:44.963Z [DEBUG]: undefined ::1 - 4288007124 [16/Dec/2025:06:25:44 +0000] "POST /api/token HTTP/1.1" 200 739 "-" "curl/8.14.1"
 2025-12-16T06:32:40.008Z [DEBUG]: undefined Authorization Server running on port 3000
 2025-12-16T06:32:45.704Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T08:10:52.075Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T08:11:01.564Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T08:11:02.038Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T08:11:55.630Z [DEBUG]: undefined TESTING MODE ONLY: curl session cookie
+2025-12-16T08:12:01.295Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:12:01 +0000] "GET /api/authorization?&client_id=4288007124&response_type=token&redirect_uri=https://oauth.tools/callback/implicit&state=1599045172021-mww&scope=email HTTP/1.1" 302 47 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:12:01.321Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:12:01 +0000] "GET /api/session/login HTTP/1.1" 200 1220 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:12:27.534Z [DEBUG]: undefined consent scopes
+2025-12-16T08:12:32.702Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:12:32 +0000] "POST /api/session/login HTTP/1.1" 302 116 "http://localhost:3000/api/session/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:12:32.707Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:12:32 +0000] "GET /api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=email HTTP/1.1" 200 1004 "http://localhost:3000/api/session/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:12:34.192Z [DEBUG]: undefined Issuing authorization
+2025-12-16T08:12:34.194Z [DEBUG]: undefined Issue authorization response parameters
+2025-12-16T08:12:34.194Z [DEBUG]: undefined Issue authorization response parameters
+2025-12-16T08:12:34.747Z [DEBUG]: undefined Authorization issue response
+2025-12-16T08:12:34.749Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:12:34 +0000] "POST /api/session/consent HTTP/1.1" 302 5 "http://localhost:3000/api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=email" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:15:16.502Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:15:16 +0000] "GET /api/session/login HTTP/1.1" 200 1220 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:18:50.963Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T08:18:50.964Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T08:18:51.595Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:18:51 +0000] "GET /api/authorization?client_id=4288007124&response_type=token&redirect_uri=http://localhost:3000/&state=1599045172021-mww&scope=email HTTP/1.1" 400 180 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:18:51.827Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:18:51 +0000] "GET /favicon.ico HTTP/1.1" 200 6888 "http://localhost:3000/api/authorization?client_id=4288007124&response_type=token&redirect_uri=http://localhost:3000/&state=1599045172021-mww&scope=email" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:06.777Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T08:19:06.778Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T08:19:07.152Z [DEBUG]: undefined TESTING MODE ONLY: curl session cookie
+2025-12-16T08:19:07.153Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:07 +0000] "GET /api/authorization?client_id=4288007124&response_type=token&redirect_uri=http://localhost:3000&state=1599045172021-mww&scope=email HTTP/1.1" 302 47 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:07.163Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:07 +0000] "GET /api/session/login HTTP/1.1" 200 1220 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:10.660Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:10 +0000] "GET /favicon.ico HTTP/1.1" 200 6888 "http://localhost:3000/api/authorization?client_id=4288007124&response_type=token&redirect_uri=http://localhost:3000/&state=1599045172021-mww&scope=email" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:14.007Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:14 +0000] "GET /favicon.ico HTTP/1.1" 200 6888 "http://localhost:3000/api/authorization?client_id=4288007124&response_type=token&redirect_uri=http://localhost:3000/&state=1599045172021-mww&scope=email" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:23.896Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T08:19:23.898Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T08:19:24.287Z [DEBUG]: undefined TESTING MODE ONLY: curl session cookie
+2025-12-16T08:19:24.288Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:24 +0000] "GET /api/authorization?client_id=4288007124&response_type=token&redirect_uri=http://localhost:3000&state=1599045172021-mww&scope=email HTTP/1.1" 302 47 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:24.301Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:24 +0000] "GET /api/session/login HTTP/1.1" 200 1220 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:28.952Z [DEBUG]: undefined consent scopes
+2025-12-16T08:19:28.954Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:28 +0000] "POST /api/session/login HTTP/1.1" 302 116 "http://localhost:3000/api/session/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:28.966Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:28 +0000] "GET /api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=email HTTP/1.1" 200 1004 "http://localhost:3000/api/session/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:30.589Z [DEBUG]: undefined Issuing authorization
+2025-12-16T08:19:30.590Z [DEBUG]: undefined Issue authorization response parameters
+2025-12-16T08:19:30.590Z [DEBUG]: undefined Issue authorization response parameters
+2025-12-16T08:19:30.979Z [DEBUG]: undefined Authorization issue response
+2025-12-16T08:19:30.981Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:30 +0000] "POST /api/session/consent HTTP/1.1" 302 5 "http://localhost:3000/api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=email" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:30.989Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:30 +0000] "GET / HTTP/1.1" 200 6888 "http://localhost:3000/api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=email" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:31.187Z [DEBUG]: undefined routes base url
+2025-12-16T08:19:31.189Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:31 +0000] "GET /api/routes.json HTTP/1.1" 200 1840 "http://localhost:3000/" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T08:19:41.168Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:08:19:41 +0000] "GET /api/session/login HTTP/1.1" 200 1220 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T09:37:44.787Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T09:37:52.938Z [DEBUG]: undefined ::1 - 4288007124 [16/Dec/2025:09:37:52 +0000] "POST //api/revocation HTTP/1.1" 404 155 "-" "curl/8.14.1"
+2025-12-16T09:38:13.160Z [DEBUG]: undefined Revocation parameters
+2025-12-16T09:38:13.161Z [DEBUG]: undefined RevocationService: URL-encoded parameters (length), body
+2025-12-16T09:38:13.162Z [DEBUG]: undefined RevocationService: calling Authlete revocation endpoint
+2025-12-16T09:38:13.163Z [DEBUG]: undefined RevocationService: decoded Basic auth
+2025-12-16T09:39:14.160Z [DEBUG]: undefined ::1 - 4288007124 [16/Dec/2025:09:39:14 +0000] "POST /api/revocation HTTP/1.1" 200 0 "-" "curl/8.14.1"
+2025-12-16T09:39:20.290Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T09:39:20.705Z [DEBUG]: undefined Revocation parameters
+2025-12-16T09:39:20.706Z [DEBUG]: undefined RevocationService: URL-encoded parameters (length), body
+2025-12-16T09:39:20.706Z [DEBUG]: undefined RevocationService: calling Authlete revocation endpoint
+2025-12-16T09:39:20.706Z [DEBUG]: undefined RevocationService: decoded Basic auth
+2025-12-16T09:39:23.040Z [DEBUG]: undefined ::1 - 4288007124 [16/Dec/2025:09:39:23 +0000] "POST /api/revocation HTTP/1.1" 200 118 "-" "curl/8.14.1"
+2025-12-16T09:40:36.990Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T09:40:38.003Z [DEBUG]: undefined Revocation parameters
+2025-12-16T09:40:38.004Z [DEBUG]: undefined RevocationService: URL-encoded parameters (length), body
+2025-12-16T09:40:38.005Z [DEBUG]: undefined RevocationService: calling Authlete revocation endpoint
+2025-12-16T09:40:38.005Z [DEBUG]: undefined RevocationService: decoded Basic auth
+2025-12-16T09:40:40.755Z [DEBUG]: undefined ::1 - 4288007124 [16/Dec/2025:09:40:40 +0000] "POST /api/revocation HTTP/1.1" 200 118 "-" "curl/8.14.1"
+2025-12-16T09:40:49.819Z [DEBUG]: undefined Revocation parameters
+2025-12-16T09:40:49.820Z [DEBUG]: undefined RevocationService: URL-encoded parameters (length), body
+2025-12-16T09:40:49.820Z [DEBUG]: undefined RevocationService: calling Authlete revocation endpoint
+2025-12-16T09:40:49.821Z [DEBUG]: undefined RevocationService: decoded Basic auth
+2025-12-16T09:40:52.538Z [DEBUG]: undefined ::1 - 4288007124 [16/Dec/2025:09:40:52 +0000] "POST /api/revocation HTTP/1.1" 200 118 "-" "curl/8.14.1"

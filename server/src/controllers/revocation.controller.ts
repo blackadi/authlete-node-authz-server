@@ -4,10 +4,9 @@ import logger from "../utils/logger";
 
 const introspectionService = new RevocationService();
 
-
 export const revocationController = {
-  handleRevocation: async(req: Request, res: Response, next: NextFunction) => {
-    try{
+  handleRevocation: async (req: Request, res: Response, next: NextFunction) => {
+    try {
       const result = await introspectionService.process(req);
 
       switch (result.action) {
@@ -16,7 +15,7 @@ export const revocationController = {
           res.setHeader("Content-Type", "application/javascript");
           res.setHeader("Cache-Control", "no-store");
           res.setHeader("Pragma", "no-cache");
-          return res.status(200).send(result.responseContent ?? "");
+          return res.status(200).send({ result });
 
         case "BAD_REQUEST":
           // Invalid request e.g., malformed token / unsupported token type
@@ -41,16 +40,16 @@ export const revocationController = {
 
         default:
           // Authlete never returns undefined actions unless misconfigured
-          req.logger?.error("Unknown revokation action", { action: result.action });
+          req.logger?.error("Unknown revokation action", {
+            action: result.action,
+          });
           logger.error("Unknown revokation action", { action: result.action });
           return res.status(500).send(result);
       }
-    }
-    catch (err) {
+    } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
       logger.error("Revocation Response Error", { message: error.message });
       return next(error);
     }
-    
-  }
-}
+  },
+};
