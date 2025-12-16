@@ -125,3 +125,25 @@
 2025-12-16T09:40:49.820Z [DEBUG]: undefined RevocationService: calling Authlete revocation endpoint
 2025-12-16T09:40:49.821Z [DEBUG]: undefined RevocationService: decoded Basic auth
 2025-12-16T09:40:52.538Z [DEBUG]: undefined ::1 - 4288007124 [16/Dec/2025:09:40:52 +0000] "POST /api/revocation HTTP/1.1" 200 118 "-" "curl/8.14.1"
+2025-12-16T10:04:23.968Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T10:04:49.927Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:04:49.928Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:04:49.936Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:10:04:49 +0000] "GET /api/token/createLocalToken?aud=https://authlete-node-authz-server.onrender.com/api/token&sub=admin HTTP/1.1" 200 570 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T10:08:35.723Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:08:35.723Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:08:35.725Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:10:08:35 +0000] "GET /api/token/createLocalToken?aud=https://authlete-node-authz-server.onrender.com/api/token&sub=admin&iss=https:/sdas HTTP/1.1" 200 570 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T10:10:11.956Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T10:10:22.550Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:10:22.551Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:10:22.558Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:10:10:22 +0000] "GET /api/token/createLocalToken?aud=https://authlete-node-authz-server.onrender.com/api/token&sub=admin&iss=https:/sdas HTTP/1.1" 200 597 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T10:10:43.086Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:10:43.087Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:10:43.089Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:10:10:43 +0000] "GET /api/token/createLocalToken?aud=https://authlete-node-authz-server.onrender.com/api/token&sub=admin HTTP/1.1" 200 610 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T10:11:08.210Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T10:11:11.127Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:11:11.128Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:11:11.134Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:10:11:11 +0000] "GET /api/token/createLocalToken?aud=https://authlete-node-authz-server.onrender.com/api/token&sub=admin HTTP/1.1" 200 608 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T10:11:34.950Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T10:11:36.647Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:11:36.648Z [DEBUG]: undefined Local Signed Token parameters
+2025-12-16T10:11:36.656Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:10:11:36 +0000] "GET /api/token/createLocalToken?aud=https://authlete-node-authz-server.onrender.com/api/token&sub=admin HTTP/1.1" 200 610 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"

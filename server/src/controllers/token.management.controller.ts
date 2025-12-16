@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { TokenManagementService } from "../services/token.operations.service";
 import logger from "../utils/logger";
 import { error } from "winston";
+import { jwt } from "../config/authlete.config";
 
 const tokenManagementService = new TokenManagementService();
 
@@ -236,7 +237,10 @@ export const localSignedToken = {
     try {
       const { ...reqBody } = req.query;
       logger("Local Signed Token parameters", { reqBody });
-
+      //read iss parameter from env if not provided
+      if (!reqBody.iss) {
+        reqBody.iss = jwt.issuer;
+      }
       //check empty parameters
       if (!reqBody.iss || !reqBody.sub || !reqBody.aud) {
         return res.status(400).json({
@@ -254,6 +258,7 @@ export const localSignedToken = {
       logger("Local Signed Token parameters", { reqBody });
 
       const result = await tokenManagementService.localSignedToken(
+        reqBody.iss,
         reqBody.aud,
         reqBody.sub
       );

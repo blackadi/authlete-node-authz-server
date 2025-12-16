@@ -16,8 +16,3 @@ export const jwt = {
 export const jwks = {
   uri: process.env.JWKS_URI || "",
 };
-
-export const token = {
-  accessTokenType: process.env.ACCESS_TOKEN_TYPE || "opaque",
-  issueRefresh: process.env.ISSUE_REFRESH_TOKEN === "true",
-};
