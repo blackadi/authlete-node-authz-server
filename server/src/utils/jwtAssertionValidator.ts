@@ -1,4 +1,3 @@
-// src/jwtAssertionValidator.ts
 import jwt, { JwtHeader, JwtPayload } from "jsonwebtoken";
 import { JwksClient } from "./jwksClient";
 

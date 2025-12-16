@@ -14,7 +14,7 @@ import { jwks, jwt } from "../config/authlete.config";
 import {
   validateJwtAssertionWithJwks,
   JwtValidationResult,
-} from "../utils/jwtAssertionValidator.ts";
+} from "../utils/jwtAssertionValidator";
 
 const tokenService = new TokenService();
 const loginService = new LoginService();
