@@ -189,7 +189,7 @@ export const tokenController = {
           }
 
         case "TOKEN_EXCHANGE":
-          return handleTokenExchange(res, result, next);
+          return handleTokenExchange(req, res, result, next);
 
         default:
           req.logger?.error("Unknown token action", { action: result.action });

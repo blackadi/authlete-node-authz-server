@@ -9,7 +9,7 @@
     "start": "node dist/server.js"
   },
   "dependencies": {
-    "@authlete/typescript-sdk": "^0.0.3-beta",
+    "@authlete/typescript-sdk": "^0.0.5-beta",
     "body-parser": "^1.20.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",

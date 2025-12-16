@@ -42,6 +42,7 @@ export async function handleJwtBearerGrant(
 }
 
 export async function handleTokenExchange(
+  req: Request,
   res: Response,
   result: TokenResponse,
   next: NextFunction
@@ -61,12 +62,12 @@ export async function handleTokenExchange(
       subject: subjectToken,
     } as TokenCreateRequest;
 
-    logger("tokenCreateRequest", tokenCreateRequest);
+    req.body = tokenCreateRequest;
+
+    logger("handleTokenExchange: tokenCreateRequest", req.body);
 
     // Call Authlete to create token
-    const tokenCreateResponse = await tokenManagementService.create(
-      tokenCreateRequest
-    );
+    const tokenCreateResponse = await tokenManagementService.create(req);
 
     switch (tokenCreateResponse.action) {
       case "OK":

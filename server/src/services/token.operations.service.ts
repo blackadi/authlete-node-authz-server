@@ -36,7 +36,10 @@ export class TokenManagementService {
 
     let reqBody: TokenCreateRequest;
 
-    if (body.grant_type === "client_credentials") {
+    if (
+      body.grant_type === "client_credentials" ||
+      body.grantType === "client_credentials"
+    ) {
       reqBody = {
         clientId: body.clientId,
         grantType: "CLIENT_CREDENTIALS",
@@ -45,69 +48,103 @@ export class TokenManagementService {
             .split(/\s+/)
             .filter(Boolean)
             .map((s) => s as unknown as Scope) ?? [],
+        ...body,
       };
-    } else if (body.grant_type === "authorization_code") {
+    } else if (
+      body.grant_type === "authorization_code" ||
+      body.grantType === "authorization_code"
+    ) {
       reqBody = {
         clientId: body.clientId,
         grantType: "AUTHORIZATION_CODE",
         code: body.code,
         redirectUri: body.redirect_uri,
+        ...body,
       };
-    } else if (body.grant_type === "refresh_token") {
+    } else if (
+      body.grant_type === "refresh_token" ||
+      body.grantType === "refresh_token"
+    ) {
       reqBody = {
         clientId: body.clientId,
         grantType: "REFRESH_TOKEN",
         refreshToken: body.refresh_token,
+        ...body,
       };
-    } else if (body.grant_type === "password") {
+    } else if (
+      body.grant_type === "password" ||
+      body.grantType === "password"
+    ) {
       reqBody = {
         clientId: body.clientId,
         grantType: "PASSWORD",
         username: body.username,
         password: body.password,
+        ...body,
       };
-    } else if (body.grant_type === "device_code") {
+    } else if (
+      body.grant_type === "device_code" ||
+      body.grantType === "device_code"
+    ) {
       reqBody = {
         clientId: body.clientId,
         grantType: "DEVICE_CODE",
         clientAssertion: body.client_assertion,
         clientAssertionType: body.client_assertion_type,
+        ...body,
       };
-    } else if (body.grant_type === "TOKEN_EXCHANGE") {
+    } else if (
+      body.grant_type === "TOKEN_EXCHANGE" ||
+      body.grantType === "TOKEN_EXCHANGE"
+    ) {
       reqBody = {
         clientId: body.clientId,
         grantType: "TOKEN_EXCHANGE",
         clientAssertion: body.client_assertion,
         clientAssertionType: body.client_assertion_type,
+        ...body,
       };
-    } else if (body.grant_type === "JWT_BEARER") {
+    } else if (
+      body.grant_type === "JWT_BEARER" ||
+      body.grantType === "JWT_BEARER"
+    ) {
       reqBody = {
         clientId: body.clientId,
         grantType: "JWT_BEARER",
         clientAssertion: body.client_assertion,
         clientAssertionType: body.client_assertion_type,
+        ...body,
       };
-    } else if (body.grant_type === "IMPLICIT") {
+    } else if (
+      body.grant_type === "IMPLICIT" ||
+      body.grantType === "IMPLICIT"
+    ) {
       reqBody = {
         clientId: body.clientId,
         grantType: "IMPLICIT",
         refreshToken: body.refresh_token,
         clientAssertion: body.client_assertion,
         clientAssertionType: body.client_assertion_type,
+        ...body,
       };
-    } else if (body.grant_type === "CIBA") {
+    } else if (body.grant_type === "CIBA" || body.grantType === "CIBA") {
       reqBody = {
         clientId: body.clientId,
         grantType: "CIBA",
         clientAssertion: body.client_assertion,
         clientAssertionType: body.client_assertion_type,
+        ...body,
       };
-    } else if (body.grant_type === "PRE_AUTHORIZED_CODE") {
+    } else if (
+      body.grant_type === "PRE_AUTHORIZED_CODE" ||
+      body.grantType === "PRE_AUTHORIZED_CODE"
+    ) {
       reqBody = {
         clientId: body.clientId,
         grantType: "PRE_AUTHORIZED_CODE",
         clientAssertion: body.client_assertion,
         clientAssertionType: body.client_assertion_type,
+        ...body,
       };
     }
 
