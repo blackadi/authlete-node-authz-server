@@ -1,0 +1,60 @@
+2025-12-16T06:16:50.807Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T06:17:15.735Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:17:15 +0000] "GET /api/routes HTTP/1.1" 200 3527 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:17:15.831Z [DEBUG]: undefined routes base url
+2025-12-16T06:17:15.832Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:17:15 +0000] "GET /api/routes.json HTTP/1.1" 200 1840 "http://localhost:3000/api/routes" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:17:20.504Z [DEBUG]: undefined Discovery parameters
+2025-12-16T06:17:21.390Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:17:21 +0000] "GET /api/.well-known/openid-configuration HTTP/1.1" 200 5809 "http://localhost:3000/api/routes" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:17:21.436Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:17:21 +0000] "GET /favicon.ico HTTP/1.1" 200 6888 "http://localhost:3000/api/.well-known/openid-configuration" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:17:32.473Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:17:32 +0000] "GET /favicon.ico HTTP/1.1" 200 6888 "http://localhost:3000/api/routes" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:19:56.274Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T06:19:56.274Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T06:19:56.980Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:19:56 +0000] "GET /api/authorization?client_id=demo-web-client&response_type=code&redirect_uri=https://oauth.tools/callback/code&state=1599045135410-jFe&scope=openid%20profile%20read&acr_values=urn:se:curity:authentication:username:username&prompt=login&ui_locales=en&nonce=1599046102647-dv4 HTTP/1.1" 400 177 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:20:06.925Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T06:20:06.925Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T06:20:07.526Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:20:07 +0000] "GET /api/authorization?client_id=4288007124&response_type=code&redirect_uri=https://oauth.tools/callback/code&state=1599045135410-jFe&scope=openid%20profile%20read&acr_values=urn:se:curity:authentication:username:username&prompt=login&ui_locales=en&nonce=1599046102647-dv4 HTTP/1.1" 302 396 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:20:29.551Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T06:20:29.552Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T06:20:30.045Z [DEBUG]: undefined TESTING MODE ONLY: curl session cookie
+2025-12-16T06:20:30.048Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:20:30 +0000] "GET /api/authorization?client_id=4288007124&response_type=code&redirect_uri=https://oauth.tools/callback/code&state=1599045135410-jFe&scope=openid%20profile%20read&prompt=login%20consent&ui_locales=en&nonce=1599046102647-dv4 HTTP/1.1" 302 47 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:20:30.060Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:20:30 +0000] "GET /api/session/login HTTP/1.1" 200 1220 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:20:31.031Z [DEBUG]: undefined consent scopes
+2025-12-16T06:20:31.032Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:20:31 +0000] "POST /api/session/login HTTP/1.1" 302 130 "http://localhost:3000/api/session/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:20:31.035Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:20:31 +0000] "GET /api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=openid,profile,read HTTP/1.1" 200 1074 "http://localhost:3000/api/session/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:20:31.862Z [ERROR]: undefined Unhandled error log.info is not a function
+2025-12-16T06:20:31.871Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:20:31 +0000] "POST /api/session/consent HTTP/1.1" 500 2394 "http://localhost:3000/api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=openid,profile,read" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:21:23.059Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T06:21:30.778Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T06:21:30.778Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T06:21:31.397Z [DEBUG]: undefined TESTING MODE ONLY: curl session cookie
+2025-12-16T06:21:31.401Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:21:31 +0000] "GET /api/authorization?client_id=4288007124&response_type=code&redirect_uri=https://oauth.tools/callback/code&state=1599045135410-jFe&scope=openid%20profile%20read&prompt=login%20consent&ui_locales=en&nonce=1599046102647-dv4 HTTP/1.1" 302 47 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:21:31.422Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:21:31 +0000] "GET /api/session/login HTTP/1.1" 200 1220 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:21:33.307Z [DEBUG]: undefined consent scopes
+2025-12-16T06:21:33.308Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:21:33 +0000] "POST /api/session/login HTTP/1.1" 302 130 "http://localhost:3000/api/session/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:21:33.313Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:21:33 +0000] "GET /api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=openid,profile,read HTTP/1.1" 200 1074 "http://localhost:3000/api/session/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:21:35.033Z [DEBUG]: undefined Issuing authorization
+2025-12-16T06:21:35.034Z [DEBUG]: undefined Issue authorization response parameters
+2025-12-16T06:21:35.034Z [DEBUG]: undefined Issue authorization response parameters
+2025-12-16T06:21:35.550Z [ERROR]: undefined Unhandled error log.debug is not a function
+2025-12-16T06:21:35.560Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:21:35 +0000] "POST /api/session/consent HTTP/1.1" 500 1302 "http://localhost:3000/api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=openid,profile,read" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:24:39.737Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T06:24:41.056Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:24:41 +0000] "GET /favicon.ico HTTP/1.1" 200 6888 "http://localhost:3000/api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=openid,profile,read" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:24:56.658Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T06:24:56.658Z [DEBUG]: undefined Authorization request parameters
+2025-12-16T06:24:57.381Z [DEBUG]: undefined TESTING MODE ONLY: curl session cookie
+2025-12-16T06:24:57.383Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:24:57 +0000] "GET /api/authorization?client_id=4288007124&response_type=code&redirect_uri=https://oauth.tools/callback/code&state=1599045135410-jFe&scope=openid%20profile%20read&prompt=login%20consent&ui_locales=en&nonce=1599046102647-dv4 HTTP/1.1" 302 47 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:24:57.386Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:24:57 +0000] "GET /api/session/login HTTP/1.1" 200 1220 "-" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:24:59.466Z [DEBUG]: undefined consent scopes
+2025-12-16T06:24:59.467Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:24:59 +0000] "POST /api/session/login HTTP/1.1" 302 130 "http://localhost:3000/api/session/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:24:59.472Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:24:59 +0000] "GET /api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=openid,profile,read HTTP/1.1" 200 1074 "http://localhost:3000/api/session/login" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:25:03.099Z [DEBUG]: undefined Issuing authorization
+2025-12-16T06:25:03.099Z [DEBUG]: undefined Issue authorization response parameters
+2025-12-16T06:25:03.099Z [DEBUG]: undefined Issue authorization response parameters
+2025-12-16T06:25:03.640Z [DEBUG]: undefined Authorization issue response
+2025-12-16T06:25:03.642Z [DEBUG]: undefined ::ffff:127.0.0.1 - - [16/Dec/2025:06:25:03 +0000] "POST /api/session/consent HTTP/1.1" 302 5 "http://localhost:3000/api/session/consent?clientId=4288007124&clientName=First%20Client&scopes=openid,profile,read" "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:146.0) Gecko/20100101 Firefox/146.0"
+2025-12-16T06:25:44.290Z [DEBUG]: undefined TokenService: received body
+2025-12-16T06:25:44.290Z [DEBUG]: undefined TokenService: decoded Basic auth
+2025-12-16T06:25:44.291Z [DEBUG]: undefined TokenService: URL-encoded parameters (length), body
+2025-12-16T06:25:44.291Z [DEBUG]: undefined TokenService: calling Authlete token endpoint
+2025-12-16T06:25:44.963Z [DEBUG]: undefined ::1 - 4288007124 [16/Dec/2025:06:25:44 +0000] "POST /api/token HTTP/1.1" 200 739 "-" "curl/8.14.1"
+2025-12-16T06:32:40.008Z [DEBUG]: undefined Authorization Server running on port 3000
+2025-12-16T06:32:45.704Z [DEBUG]: undefined Authorization Server running on port 3000

@@ -61,7 +61,7 @@ export async function handleTokenExchange(
       subject: subjectToken,
     } as TokenCreateRequest;
 
-    logger.info("tokenCreateRequest", tokenCreateRequest);
+    logger("tokenCreateRequest", tokenCreateRequest);
 
     // Call Authlete to create token
     const tokenCreateResponse = await tokenManagementService.create(

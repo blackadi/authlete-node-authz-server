@@ -18,7 +18,7 @@ export class UserInfoService {
       reqBody.token = authHeader.replace("Bearer ", "");
     }
     req.logger("Userinfo parameters", { reqBody }) ||
-      logger.info("Userinfo parameters", { reqBody });
+      logger("Userinfo parameters", { reqBody });
 
     // Call Authlete /userinfo API
     const response = await authleteApi.userinfo.process({

@@ -34,7 +34,7 @@ export const sessionController = {
       const loginDecision = req.body.login; // "submit" or "cancel"
       if (loginDecision === "cancel") {
         const log = req.logger || logger;
-        log.info("Login canceled for ticket", { ticket: authz?.ticket });
+        log("Login canceled for ticket", { ticket: authz?.ticket });
         const response = await authorizationService.fail(
           authz?.ticket ?? "",
           "NOT_LOGGED_IN"
@@ -113,7 +113,7 @@ export const sessionController = {
       if (decision === "approve") {
         // Call Authlete /authorization/issue API
         const log = req.logger || logger;
-        log.info("Issuing authorization", {
+        log("Issuing authorization", {
           ticket,
           user: req.session.user,
           clientId: req.session.authorization.clientId,
@@ -121,7 +121,7 @@ export const sessionController = {
           clientName: req.session.authorization.clientName,
         });
         const response = await authorizationService.issue(req);
-        log.debug("Authorization issue response", { response });
+        log("Authorization issue response", { response });
 
         // Clear session authorization info before sending result
         delete req.session.authorization;
