@@ -55,4 +55,4 @@ curl -X POST http://localhost:3000/api/token \
   -d "accessToken=IErOaTwPmKFLBi6KN5VALJPQg4112PJsNwSqbmh6fLk" \
   -d "scope=email profile"
 
-  curl -X DELETE http://localhost:3000/api/token/delete/asdasd
+  curl -X DELETE http://localhost:3000/api/token/delete/IErOaTwPmKFLBi6KN5VALJPQg4112PJsNwSqbmh6fLk

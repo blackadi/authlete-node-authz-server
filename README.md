@@ -5,6 +5,7 @@ A small example OAuth 2.0 / OpenID Connect authorization server built with Expre
 This repository is intended as a learning/demo server — it is not production hardened. Use it to explore the HTTP endpoints and how an OAuth2 flow can be implemented using Authlete APIs.
 
 ## Features
+
 - Authorization endpoint (GET/POST)
 - Token endpoint (POST, accepts JSON and form-encoded payloads)
 - UserInfo endpoint (POST)
@@ -17,6 +18,7 @@ This repository is intended as a learning/demo server — it is not production h
 - Structured logging with request tracking (Winston + Morgan + request-id)
 
 ## Prerequisites
+
 - Node.js 18+ (or latest stable)
 - npm
 - An Authlete account and service configured (optional if you want to call Authlete APIs)
@@ -26,7 +28,7 @@ This repository is intended as a learning/demo server — it is not production h
 1. Install dependencies
 
 ```bash
-npm install
+npm --prefix server install && npm --prefix client install
 ```
 
 2. Create a `.env` file in the project root or set environment variables. Minimal example `.env`:
@@ -38,11 +40,21 @@ AUTHLETE_BASE_URL=https://{region}.authlete.com  # example: https://us.authlete.
 AUTHLETE_SERVICE_ID=your_authlete_service_id_here
 
 # Server Configuration
-PORT=8080
+PORT=3000
 NODE_ENV=development
 
 # Session Configuration
 SESSION_SECRET=your_session_secret_here
+
+# If ACCESS_TOKEN_TYPE=jwt:
+JWT_PUBLIC_KEY_PEM="-----BEGIN PUBLIC KEY-----\nMFkw......\n-----END PUBLIC KEY-----\n"
+JWT_PRIVATE_KEY_PEM="-----BEGIN PRIVATE KEY-----\nMEE......\n-----END PRIVATE KEY-----\n"
+JWT_SELF_SIGNED_CERT_PEM="-----BEGIN CERTIFICATE-----\nMII......\n-----END CERTIFICATE-----\n"
+JWT_ISSUER= #https://example.test/
+
+# JWKS URI
+JWKS_URI= #jwks URI
+
 
 # Logging (optional)
 LOG_LEVEL=debug           # debug, info, warn, error
@@ -52,10 +64,10 @@ MORGAN_FORMAT=combined    # combined, short, dev, etc.
 3. Start the server in development mode
 
 ```bash
-npm run dev
+npm --prefix server run dev
 ```
 
-The server listens on port `8080` by default (configurable via `PORT` env var). Open `http://localhost:8080/api/routes` to see the available routes and example curl commands.
+The server listens on port `3000` by default (configurable via `PORT` env var). Open `http://localhost:3000/api/routes` to see the available routes and example curl commands.
 
 ## File Structure
 
@@ -101,6 +113,7 @@ src/
 ## Views & Templates
 
 The server uses **EJS** for server-side rendering:
+
 - `login.ejs` — Sign-in form for the interactive authorization flow
 - `consent.ejs` — Consent page showing requested scopes with approve/deny actions
 - `error.ejs` — Error page (shown for HTTP errors)
@@ -113,42 +126,44 @@ The server uses **EJS** for server-side rendering:
 The server uses **Winston** for structured application logging and **Morgan** for HTTP access logs.
 
 **Log files:**
+
 - `logs/app-YYYY-MM-DD.log` — Application logs (info and above)
 - `logs/error-YYYY-MM-DD.log` — Error logs (daily rotation, 30-day retention)
 
 **Console output:**
+
 - Development: colorized, human-readable format
 - Production: JSON format with timestamps
 
 Each request is assigned a unique ID via `express-request-id` middleware, which is included in all logs for easy tracing. Use `LOG_LEVEL` env var to control verbosity (default: `debug` in development, `info` in production).
 
 ## Current Routes
+
 The server exposes the following endpoints:
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/api/authorization` | Authorization endpoint (interactive) |
-| POST | `/api/token` | Token endpoint |
-| POST | `/api/userinfo` | UserInfo endpoint |
-| POST | `/api/introspection` | Token introspection |
-| POST | `/api/revocation` | Token revocation |
-| GET | `/api/session/login` | Login page |
-| POST | `/api/session/login` | Login submission |
-| GET | `/api/session/consent` | Consent page |
-| POST | `/api/session/consent` | Consent submission |
-| GET | `/api/.well-known/jwks.json` | JSON Web Key Set |
-| GET | `/api/.well-known/openid-configuration` | OpenID Configuration |
-| GET | `/api/logout` | RP-initiated logout |
-| POST | `/api/backchannel_logout` | Backchannel logout |
-| GET | `/api/routes` | Routes listing UI |
-| GET | `/api/routes.json` | Routes as JSON |
-
+| Method | Path                                    | Description                          |
+| ------ | --------------------------------------- | ------------------------------------ |
+| GET    | `/api/authorization`                    | Authorization endpoint (interactive) |
+| POST   | `/api/token`                            | Token endpoint                       |
+| POST   | `/api/userinfo`                         | UserInfo endpoint                    |
+| POST   | `/api/introspection`                    | Token introspection                  |
+| POST   | `/api/revocation`                       | Token revocation                     |
+| GET    | `/api/session/login`                    | Login page                           |
+| POST   | `/api/session/login`                    | Login submission                     |
+| GET    | `/api/session/consent`                  | Consent page                         |
+| POST   | `/api/session/consent`                  | Consent submission                   |
+| GET    | `/api/.well-known/jwks.json`            | JSON Web Key Set                     |
+| GET    | `/api/.well-known/openid-configuration` | OpenID Configuration                 |
+| GET    | `/api/logout`                           | RP-initiated logout                  |
+| POST   | `/api/backchannel_logout`               | Backchannel logout                   |
+| GET    | `/api/routes`                           | Routes listing UI                    |
+| GET    | `/api/routes.json`                      | Routes as JSON                       |
 
 ## Example OAuth 2.0 flows (curl)
 
 These examples assume the server is running on `http://localhost:3000` and that you are driving the flow from a client application. Replace client IDs, secrets, and codes with real values from your environment.
 
-1) Authorization Code (interactive)
+1. Authorization Code (interactive)
 
 - Step A: The client directs the user-agent to the authorization endpoint. Example (open in browser):
 
@@ -185,7 +200,7 @@ curl -X POST http://localhost:3000/api/token \
 	}'
 ```
 
-2) Resource Owner Password Credentials (for testing only)
+2. Resource Owner Password Credentials (for testing only)
 
 ```bash
 curl -X POST http://localhost:3000/api/token \
@@ -196,7 +211,7 @@ curl -X POST http://localhost:3000/api/token \
 	-d "scope=openid profile"
 ```
 
-3) Introspection
+3. Introspection
 
 ```bash
 curl -X POST http://localhost:3000/api/introspection \
@@ -205,7 +220,7 @@ curl -X POST http://localhost:3000/api/introspection \
 	-d "token=ACCESS_OR_REFRESH_TOKEN"
 ```
 
-4) Revocation
+4. Revocation
 
 ```bash
 curl -X POST http://localhost:3000/api/revocation \
@@ -214,7 +229,7 @@ curl -X POST http://localhost:3000/api/revocation \
 	-d "token=ACCESS_OR_REFRESH_TOKEN"
 ```
 
-5) UserInfo
+5. UserInfo
 
 ```bash
 curl -X POST http://localhost:3000/api/userinfo \
@@ -225,6 +240,7 @@ curl -X POST http://localhost:3000/api/userinfo \
 ## Session Handling
 
 The project uses `express-session` to store login/authorization context across interactive steps:
+
 - User login state (`req.session.user`)
 - OAuth authorization details (`req.session.authorization` with ticket, clientId, scopes, etc.)
 - Custom session options via environment or factory configuration
@@ -237,12 +253,14 @@ See `src/middleware/session.ts` for configuration details.
 ## Error Handling
 
 The global error handler (`src/middleware/errorHandler.ts`):
+
 - Renders user-friendly HTML error pages (with stack traces in development)
 - Returns JSON for API requests (Accept header detection)
 - Logs all errors with request context via structured logger
 
 ## Development Tips
-- Open `http://localhost:8080/api/routes` to see interactive routes listing and copy-paste curl examples
+
+- Open `http://localhost:3000/api/routes` to see interactive routes listing and copy-paste curl examples
 - Check `logs/` directory for application and error logs (automatically rotated daily)
 - Use `LOG_LEVEL=debug` env var to see verbose debug output
 - Monitor `req.logger` output in services/controllers for request-specific tracing (includes request ID)
@@ -252,6 +270,7 @@ The global error handler (`src/middleware/errorHandler.ts`):
 This example is provided for educational purposes. It is not production-ready and omits many security best practices (CSRF protection, input validation, secure cookie settings for production, etc.).
 
 ## Roadmap
+
 1. Dockerfile for containerized deployment
 2. Automated tests (unit and integration)
 3. Persistent session store integration (Redis)
@@ -259,7 +278,8 @@ This example is provided for educational purposes. It is not production-ready an
 5. Admin dashboard for service management
 
 ## Testing with Demo REACT client
-This project contains  a React SPA that plays a role as OAuth 2.0 client (Authorization Code Flow with PKCE).
+
+This project contains a React SPA that plays a role as OAuth 2.0 client (Authorization Code Flow with PKCE).
 
 ```bash
 cd /client
