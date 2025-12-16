@@ -43,13 +43,13 @@ const HomePage: React.FC = () => {
       <p>Start an Authorization Code Flow with PKCE against the Authlete-backed authorization server.</p>
       {error && <div className="error">{error}</div>}
       <button type="button" className="button" onClick={startLogin} disabled={loading}>
-        {loading ? 'Redirecting…' : 'Sign in with Authlete Node Authorization Server'}
+        {loading ? 'Redirecting…' : 'Sign in with Authlete Node Authorization Server (DEMO: Public Client Type with PKCE) '}
       </button>
       {isDevelopment && (
         <div className="info" style={{ 
           marginTop: '1rem', 
           padding: '0.5rem', 
-          backgroundColor: '#e3f2fd', 
+          backgroundColor: '#14191cff', 
           borderRadius: '4px',
           fontSize: '0.8rem'
         }}>

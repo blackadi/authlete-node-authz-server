@@ -130,7 +130,6 @@ export const tokensListController = {
   handleListTokens: async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await tokenManagementService.list();
-      throw new Error("Error");
       res.setHeader("Content-Type", "application/json");
       return res.status(200).send({ result });
     } catch (err) {

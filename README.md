@@ -25,6 +25,14 @@ This repository is intended as a learning/demo server — it is not production h
 
 ## Quick Start
 
+### Demo Link
+
+- **[NodeJS Authorization Server](https://authlete-node-authz-server.onrender.com/)**
+
+  ![A screenshot of live demo](images/Screenshot_10.png)
+
+### Local run
+
 1. Install dependencies
 
 ```bash
@@ -79,30 +87,45 @@ src/
 │   ├── app.config.ts          # App configuration
 │   └── authlete.config.ts      # Authlete SDK setup
 ├── controllers/                # Request handlers for each endpoint
+│   ├── authorization-response.controller.ts
+│   ├── authorization-response.handler.ts # Shared Authlete response handler
 │   ├── authorization.controller.ts
+│   ├── token-exchange-response.handler.ts # Shared Authlete response handler
+│   ├── token-fail-response.handler.ts # Shared Authlete response handler
+│   ├── token-fail.controller.ts
+│   ├── token-issue-response.handler.ts # Shared Authlete response handler
+│   ├── token-issue.controller.ts
 │   ├── token.controller.ts
+│   ├── token.management.controller.ts
 │   ├── session.controller.ts   # Login/consent handlers
 │   ├── userinfo.controller.ts
 │   ├── revocation.controller.ts
+│   ├── introspection-standard.controller.ts
 │   ├── introspection.controller.ts
 │   ├── discovery.controller.ts
+│   ├── userinfo-issue-response.handler.ts # Shared Authlete response handler
 │   ├── jwks.controller.ts
 │   ├── logout.controller.ts
+│   ├── userinfo-issue.controller.ts
 │   └── authorization-response.handler.ts  # Shared Authlete response handler
 ├── middleware/
-│   ├── session.ts              # express-session configuration
-│   └── errorHandler.ts         # Global error handler (renders HTML/JSON)
-├── routes/                     # Route definitions
-├── services/                   # Authlete API calls and business logic
+│   ├── session.ts              	# express-session configuration
+│   └── errorHandler.ts         	# Global error handler (renders HTML/JSON)
+├── routes/                     	# Route definitions
+├── services/                   	# Authlete API calls and business logic
 ├── utils/
-│   ├── logger.ts              # Winston logger configuration
-│   ├── crypto.ts              # PKCE helpers
-│   └── http.ts                # HTTP utilities
+createLocalJWT.ts
+│   ├── logger.ts              		# Winston logger configuration
+│   ├── crypto.ts              		# PKCE helpers
+│   └── jwksClient.ts          		# JWKS generator utilities
+│   └── jwtAssertionValidator.ts	# JWKS generator utilities
+│   └── createLocalJWT.ts			# JWT generator utilities
 ├── types/
-│   ├── express.d.ts           # Express Request augmentation (req.id, req.logger)
-│   └── express-session.d.ts   # Session data typing
-└── views/                     # EJS templates
-    ├── login.ejs
+│   ├── express.d.ts           		# Express Request augmentation (req.id, req.logger)
+│   └── express-session.d.ts   		# Session data typing
+└── views/                     		# EJS templates
+	├── index.ejs
+	├── login.ejs
     ├── consent.ejs
     ├── logout.ejs
     ├── error.ejs
@@ -114,6 +137,7 @@ src/
 
 The server uses **EJS** for server-side rendering:
 
+- `index.ejs` — Default page
 - `login.ejs` — Sign-in form for the interactive authorization flow
 - `consent.ejs` — Consent page showing requested scopes with approve/deny actions
 - `error.ejs` — Error page (shown for HTTP errors)
@@ -147,6 +171,7 @@ The server exposes the following endpoints:
 | POST   | `/api/token`                            | Token endpoint                       |
 | POST   | `/api/userinfo`                         | UserInfo endpoint                    |
 | POST   | `/api/introspection`                    | Token introspection                  |
+| POST   | `/api/introspection/standard`           | Token introspection (RFC 7662)       |
 | POST   | `/api/revocation`                       | Token revocation                     |
 | GET    | `/api/session/login`                    | Login page                           |
 | POST   | `/api/session/login`                    | Login submission                     |
@@ -154,6 +179,12 @@ The server exposes the following endpoints:
 | POST   | `/api/session/consent`                  | Consent submission                   |
 | GET    | `/api/.well-known/jwks.json`            | JSON Web Key Set                     |
 | GET    | `/api/.well-known/openid-configuration` | OpenID Configuration                 |
+| GET    | `/api/token/list`                       | Token Operations Endpoint            |
+| POST   | `/api/token/create`                     | Token Operations Endpoint            |
+| PATCH  | `/api/token/update`                     | Token Operations Endpoint            |
+| DELETE | `/api/token/delete`                     | Token Operations Endpoint            |
+| POST   | `/api/token/revoke`                     | Token Operations Endpoint            |
+| POST   | `/api/token/reissue`                    | Token Operations Endpoint            |
 | GET    | `/api/logout`                           | RP-initiated logout                  |
 | POST   | `/api/backchannel_logout`               | Backchannel logout                   |
 | GET    | `/api/routes`                           | Routes listing UI                    |
@@ -206,12 +237,28 @@ curl -X POST http://localhost:3000/api/token \
 curl -X POST http://localhost:3000/api/token \
 	-H "Content-Type: application/x-www-form-urlencoded" \
 	-d "grant_type=password" \
-	-d "username=alice" \
-	-d "password=alice_password" \
-	-d "scope=openid profile"
+	-d "username=admin" \
+	-d "password=password" \
+	-d "scope=openid profile" \
+	-d "client_id=***" \
+	-d "client_secret=****"
+```
+
+```bash
+curl -X POST http://localhost:3000/api/token \
+-H 'Authorization: Basic BASE64(client_id:client_secret)' \
+-H 'Content-Type: application/x-www-form-urlencoded' \
+-d 'grant_type=password&response_type=token&username=admin&password=password&scope=email'
 ```
 
 3. Introspection
+
+```bash
+curl -X POST http://localhost:3000/api/introspection \
+	-H "Content-Type: application/x-www-form-urlencoded" \
+	-H "Authorization: Basic BASE64(client_id:client_secret)" \
+	-d "token=ACCESS_OR_REFRESH_TOKEN"
+```
 
 ```bash
 curl -X POST http://localhost:3000/api/introspection \
@@ -277,9 +324,22 @@ This example is provided for educational purposes. It is not production-ready an
 4. Enhanced CSRF/CORS protection
 5. Admin dashboard for service management
 
+## Testing with OAuth Tools
+
+- Go to **[OAuth Tools](https://oauth.tools/)**
+- Use **Curity Playground**, which provides a UI to test OAuth 2.0 flows with the demo server.
+- Either enter the demo server metadata manually or fetch it automatically from the Curity Playground settings (as shown in the screenshots).
+- Start testing the flows.
+
+  ![A screenshot of UI](images/Screenshot_6.png)
+  ![A screenshot of UI](images/Screenshot_7.png)
+  ![A screenshot of UI](images/Screenshot_8.png)
+
 ## Testing with Demo REACT client
 
-This project contains a React SPA that plays a role as OAuth 2.0 client (Authorization Code Flow with PKCE).
+This project contains a React SPA that plays a role as OAuth 2.0 client (Authorization Code Flow with PKCE using Public Client Type).
+
+inside the CLIENT Directory
 
 ```bash
 cd /client
@@ -288,6 +348,14 @@ cp .env.example .env
 npm install
 npm run build
 npm run preview
+```
+
+Root Directory
+
+```bash
+npm --prefix client install
+npm --prefix client run build
+npm --prefix client run preview
 ```
 
 The SPA will run on http://localhost:3001
