@@ -10,6 +10,7 @@ import { authleteApi, serviceId } from "./authlete.service";
 import { Request } from "express";
 import logger from "../utils/logger";
 import { fetch } from "../utils/http";
+import { Token } from "@authlete/typescript-sdk/dist/commonjs/sdk/token";
 
 export class TokenService {
   async process(req: Request): Promise<TokenResponse> {
@@ -113,7 +114,7 @@ export class TokenService {
 
     // Call Authlete /token API
     if (reqBody.parameters.includes("refresh_token")) {
-      const response = await fetch(
+      const response = await fetch<TokenResponse>(
         `${process.env.AUTHLETE_BASE_URL}/api/${process.env.AUTHLETE_SERVICE_ID}/auth/token`,
         "POST",
         { parameters: reqBody.parameters, clientId, clientSecret }

@@ -84,8 +84,9 @@ export class AuthorizationService {
         subject,
       });
 
-      const optionalClaims =
-        '{"name": "Odai Shalabi","email": "blackadi@blackadi.dev","email_verified": true,"picture": "https://lh3.googleusercontent.com/a/ACg8ocKxOjqZ-NPCUuRAOATIfXjeNrawMCtk6xHBKHJagUKPEURfHWno=s288-c-no"}';
+      // const optionalClaims =
+      //   '{"name": "Odai Shalabi","email": "blackadi@blackadi.dev","email_verified": true,"picture": "https://lh3.googleusercontent.com/a/ACg8ocKxOjqZ-NPCUuRAOATIfXjeNrawMCtk6xHBKHJagUKPEURfHWno=s288-c-no"}';
+      const optionalClaims = req.session.authorization?.claims;
 
       const response = await authleteApi.authorization.issue({
         serviceId,

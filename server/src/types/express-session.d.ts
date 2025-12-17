@@ -10,6 +10,7 @@ declare module "express-session" {
       clientId?: number;
       clientName?: string;
       scopes?: Array<Scope>;
+      claims?: string;
     };
     secret?: string;
     saveUninitialized?: string;

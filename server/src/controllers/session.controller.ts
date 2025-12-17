@@ -21,6 +21,9 @@ export const sessionController = {
     try {
       const { username, password } = req.body;
 
+      console.log(req.params);
+      console.log(req.query);
+
       // Must have ticket from OAuth2 authorization request
       const authz = req.session.authorization;
       if (!authz || !authz.ticket) {

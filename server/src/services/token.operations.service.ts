@@ -7,17 +7,17 @@ import { Request } from "express";
 import logger from "../utils/logger";
 import {
   IdtokenReissueResponse,
+  Scope,
   TokenGetListResponse,
   TokenRevokeRequest,
   TokenRevokeResponse,
   TokenUpdateRequest,
   TokenUpdateResponse,
-  GrantType,
 } from "@authlete/typescript-sdk/src/models";
 import createLocalJWT from "../utils/createLocalJWT";
 
 export class TokenManagementService {
-  async create(req: Request): Promise<TokenCreateResponse> {
+  async create(req: Request | any): Promise<TokenCreateResponse> {
     let { ...body }: TokenCreateRequest = req.body;
     logger("TokenCreateService: calling Authlete token management endpoint", {
       body,
@@ -34,119 +34,46 @@ export class TokenManagementService {
       body.clientId = Number(client_id);
     }
 
-    let reqBody: TokenCreateRequest;
-
-    if (
-      body.grant_type === "client_credentials" ||
-      body.grantType === "client_credentials"
-    ) {
-      reqBody = {
-        clientId: body.clientId,
-        grantType: "CLIENT_CREDENTIALS",
-        scopes:
-          (typeof body.scope === "string" ? body.scope : "")
-            .split(/\s+/)
-            .filter(Boolean)
-            .map((s) => s as unknown as Scope) ?? [],
-        ...body,
-      };
-    } else if (
-      body.grant_type === "authorization_code" ||
-      body.grantType === "authorization_code"
-    ) {
-      reqBody = {
-        clientId: body.clientId,
-        grantType: "AUTHORIZATION_CODE",
-        code: body.code,
-        redirectUri: body.redirect_uri,
-        ...body,
-      };
-    } else if (
-      body.grant_type === "refresh_token" ||
-      body.grantType === "refresh_token"
-    ) {
-      reqBody = {
-        clientId: body.clientId,
-        grantType: "REFRESH_TOKEN",
-        refreshToken: body.refresh_token,
-        ...body,
-      };
-    } else if (
-      body.grant_type === "password" ||
-      body.grantType === "password"
-    ) {
-      reqBody = {
-        clientId: body.clientId,
-        grantType: "PASSWORD",
-        username: body.username,
-        password: body.password,
-        ...body,
-      };
-    } else if (
-      body.grant_type === "device_code" ||
-      body.grantType === "device_code"
-    ) {
-      reqBody = {
-        clientId: body.clientId,
-        grantType: "DEVICE_CODE",
-        clientAssertion: body.client_assertion,
-        clientAssertionType: body.client_assertion_type,
-        ...body,
-      };
-    } else if (
-      body.grant_type === "TOKEN_EXCHANGE" ||
-      body.grantType === "TOKEN_EXCHANGE"
-    ) {
-      reqBody = {
-        clientId: body.clientId,
-        grantType: "TOKEN_EXCHANGE",
-        clientAssertion: body.client_assertion,
-        clientAssertionType: body.client_assertion_type,
-        ...body,
-      };
-    } else if (
-      body.grant_type === "JWT_BEARER" ||
-      body.grantType === "JWT_BEARER"
-    ) {
-      reqBody = {
-        clientId: body.clientId,
-        grantType: "JWT_BEARER",
-        clientAssertion: body.client_assertion,
-        clientAssertionType: body.client_assertion_type,
-        ...body,
-      };
-    } else if (
-      body.grant_type === "IMPLICIT" ||
-      body.grantType === "IMPLICIT"
-    ) {
-      reqBody = {
-        clientId: body.clientId,
-        grantType: "IMPLICIT",
-        refreshToken: body.refresh_token,
-        clientAssertion: body.client_assertion,
-        clientAssertionType: body.client_assertion_type,
-        ...body,
-      };
-    } else if (body.grant_type === "CIBA" || body.grantType === "CIBA") {
-      reqBody = {
-        clientId: body.clientId,
-        grantType: "CIBA",
-        clientAssertion: body.client_assertion,
-        clientAssertionType: body.client_assertion_type,
-        ...body,
-      };
-    } else if (
-      body.grant_type === "PRE_AUTHORIZED_CODE" ||
-      body.grantType === "PRE_AUTHORIZED_CODE"
-    ) {
-      reqBody = {
-        clientId: body.clientId,
-        grantType: "PRE_AUTHORIZED_CODE",
-        clientAssertion: body.client_assertion,
-        clientAssertionType: body.client_assertion_type,
-        ...body,
-      };
-    }
+    const reqBody: TokenCreateRequest = {
+      scopes:
+        (typeof req.body.scope === "string" ? req.body.scope : "")
+          .split(/\s+/)
+          .filter(Boolean)
+          .map((s: Scope) => s as unknown as Scope) ?? [],
+      ...body,
+      grantType:
+        req.body.grant_type === "client_credentials" ||
+        req.body.grantType === "client_credentials"
+          ? "CLIENT_CREDENTIALS"
+          : req.body.grant_type === "authorization_code" ||
+            req.body.grantType === "authorization_code"
+          ? "AUTHORIZATION_CODE"
+          : req.body.grant_type === "refresh_token" ||
+            req.body.grantType === "refresh_token"
+          ? "REFRESH_TOKEN"
+          : req.body.grant_type === "password" ||
+            req.body.grantType === "password"
+          ? "PASSWORD"
+          : req.body.grant_type === "implicit" ||
+            req.body.grantType === "implicit"
+          ? "IMPLICIT"
+          : req.body.grant_type === "token_exchange" ||
+            req.body.grantType === "token_exchange"
+          ? "TOKEN_EXCHANGE"
+          : req.body.grant_type == "device_code" ||
+            req.body.grantType === "device_code"
+          ? "DEVICE_CODE"
+          : req.body.grant_type ===
+              "urn:ietf:params:oauth:grant-type:jwt-bearer" ||
+            req.body.grantType === "urn:ietf:params:oauth:grant-type:jwt-bearer"
+          ? "JWT_BEARER"
+          : req.body.grantType ===
+              "grant_type=urn:ietf:params:oauth:grant-type:pre-authorized_code" ||
+            req.body.grantType ===
+              "grant_type=urn:ietf:params:oauth:grant-type:pre-authorized_code"
+          ? "PRE_AUTHORIZED_CODE"
+          : "AUTHORIZATION_CODE", // default to AUTHORIZATION_CODE
+    };
 
     logger(
       "TokenCreateService: calling Authlete token management endpoint",
@@ -170,10 +97,10 @@ export class TokenManagementService {
     const reqBody: TokenUpdateRequest = {
       ...body,
       scopes:
-        (typeof body.scope === "string" ? body.scope : "")
+        (typeof req.body.scope === "string" ? req.body.scope : "")
           .split(/\s+/)
           .filter(Boolean)
-          .map((s) => s as unknown as Scope) ?? [],
+          .map((s: Scope) => s as unknown as Scope) ?? [],
     } as TokenUpdateRequest;
 
     logger(
@@ -220,7 +147,7 @@ export class TokenManagementService {
     return response;
   }
 
-  async revoke(req: TokenRevokeRequest): Promise<TokenRevokeResponse> {
+  async revoke(req: TokenRevokeRequest | any): Promise<TokenRevokeResponse> {
     logger(
       "TokenDeleteService: calling Authlete token management endpoint",
       req
@@ -234,8 +161,15 @@ export class TokenManagementService {
     return response;
   }
 
-  localSignedToken(iss: string, sub: string, aud: string[]): string {
-    const token = createLocalJWT(iss, sub, aud);
-    return token;
+  localSignedToken(
+    iss: string,
+    sub: string,
+    aud: string[]
+  ): {
+    token: string;
+    publicKey: string;
+  } {
+    const { token, publicKey } = createLocalJWT(iss, sub, aud);
+    return { token, publicKey };
   }
 }

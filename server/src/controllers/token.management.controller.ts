@@ -3,6 +3,7 @@ import { TokenManagementService } from "../services/token.operations.service";
 import logger from "../utils/logger";
 import { error } from "winston";
 import { jwt } from "../config/authlete.config";
+import { Scope } from "@authlete/typescript-sdk/src/models";
 
 const tokenManagementService = new TokenManagementService();
 
@@ -53,7 +54,7 @@ export const tokenDeleteController = {
     next: NextFunction
   ) => {
     try {
-      const { accessTokenIdentifier }: string = req.params;
+      const accessTokenIdentifier: string = req.params.accessTokenIdentifier;
       logger(
         "TokenDeleteService: calling Authlete token management endpoint",
         accessTokenIdentifier
@@ -252,14 +253,14 @@ export const localSignedToken = {
         (typeof reqBody.aud === "string" ? reqBody.aud : "")
           .split(/\s+/)
           .filter(Boolean)
-          .map((s) => s as unknown as Scope) ?? [];
+          .map((s: any) => s as any) ?? [];
 
       logger("Local Signed Token parameters", { reqBody });
 
-      const result = await tokenManagementService.localSignedToken(
-        reqBody.iss,
-        reqBody.aud,
-        reqBody.sub
+      const result = tokenManagementService.localSignedToken(
+        (reqBody.iss as string) ?? "",
+        (reqBody.sub as string) ?? "",
+        (reqBody.aud as string[]) ?? []
       );
 
       res.setHeader("Content-Type", "application/json");

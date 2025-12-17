@@ -5,7 +5,9 @@ import { server } from "../config/app.config";
 const isDev = server.nodeEnv !== "production";
 
 const consoleTransport = new transports.Console({
-  format: format.combine(format.colorize(), format.simple()),
+  format: isDev
+    ? format.combine(format.colorize(), format.simple())
+    : format.combine(format.timestamp(), format.json()),
 });
 
 const fileTransport = new DailyRotateFile({
@@ -38,7 +40,7 @@ const logger = createLogger({
 
 // 1. Create the primary dynamic function alias
 // This function determines whether to use .info() or .debug() dynamically.
-const primaryLogFunction = logger[server.logLevel].bind(logger);
+const primaryLogFunction = (logger as any)[server.logLevel].bind(logger);
 
 // 2. Attach the .error method explicitly to the primary function object
 // This allows you to call logger.error() reliably regardless of the dynamic level.

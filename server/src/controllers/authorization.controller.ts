@@ -51,6 +51,7 @@ export const authorizationController = {
                 .split(/\s+/)
                 .filter(Boolean)
                 .map((s) => s as unknown as Scope) ?? [],
+            claims: result.idTokenClaims ?? "",
           };
           // this will log the curl command session info which contains the ticket and user using connect.sid cookie
           req.logger("TESTING MODE ONLY: curl session cookie", {
