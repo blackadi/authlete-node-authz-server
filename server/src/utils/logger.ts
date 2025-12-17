@@ -5,9 +5,7 @@ import { server } from "../config/app.config";
 const isDev = server.nodeEnv !== "production";
 
 const consoleTransport = new transports.Console({
-  format: isDev
-    ? format.combine(format.colorize(), format.simple())
-    : format.combine(format.timestamp(), format.json()),
+  format: format.combine(format.colorize(), format.simple()),
 });
 
 const fileTransport = new DailyRotateFile({

@@ -9,6 +9,7 @@ import {
 import { authleteApi, serviceId } from "./authlete.service";
 import { Request } from "express";
 import logger from "../utils/logger";
+import { fetch } from "../utils/http";
 
 export class TokenService {
   async process(req: Request): Promise<TokenResponse> {
@@ -111,12 +112,22 @@ export class TokenService {
       });
 
     // Call Authlete /token API
-    const response = await authleteApi.token.process({
-      serviceId,
-      tokenRequest: reqBody,
-    });
+    if (reqBody.parameters.includes("refresh_token")) {
+      const response = await fetch(
+        `${process.env.AUTHLETE_BASE_URL}/api/${process.env.AUTHLETE_SERVICE_ID}/auth/token`,
+        "POST",
+        { parameters: reqBody.parameters, clientId, clientSecret }
+      );
 
-    return response;
+      return response;
+    } else {
+      const response = await authleteApi.token.process({
+        serviceId,
+        tokenRequest: reqBody,
+      });
+
+      return response;
+    }
   }
 
   async fail(req: TokenFailRequest): Promise<TokenFailResponse> {
