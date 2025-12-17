@@ -113,7 +113,10 @@ export class TokenService {
       });
 
     // Call Authlete /token API
-    if (reqBody.parameters.includes("refresh_token")) {
+    if (
+      reqBody.parameters.includes("refresh_token") ||
+      reqBody.parameters.includes("access_token")
+    ) {
       const response = await fetch<TokenResponse>(
         `${process.env.AUTHLETE_BASE_URL}/api/${process.env.AUTHLETE_SERVICE_ID}/auth/token`,
         "POST",
