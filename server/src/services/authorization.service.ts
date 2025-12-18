@@ -89,13 +89,17 @@ export class AuthorizationService {
       // const optionalClaims =
       //   req.session.authorization?.authorizationIssueRequest?.claims;
 
+      const reqBody = {
+        ...req.session.authorization?.authorizationIssueRequest,
+        ticket,
+        subject,
+      };
+
+      logger("Issue authorization request parameters", { params: reqBody });
+
       const response = await authleteApi.authorization.issue({
         serviceId,
-        authorizationIssueRequest: {
-          ticket: ticket,
-          subject: subject,
-          ...req.session.authorization?.authorizationIssueRequest,
-        },
+        authorizationIssueRequest: reqBody,
       });
 
       return response;
