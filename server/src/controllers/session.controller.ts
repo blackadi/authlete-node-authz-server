@@ -21,12 +21,9 @@ export const sessionController = {
     try {
       const { username, password } = req.body;
 
-      console.log(req.params);
-      console.log(req.query);
-
       // Must have ticket from OAuth2 authorization request
       const authz = req.session.authorization;
-      if (!authz || !authz.ticket) {
+      if (!authz || !authz.authorizationIssueRequest?.ticket) {
         const err = new Error(
           "Missing authorization context - session not found"
         );
@@ -37,9 +34,11 @@ export const sessionController = {
       const loginDecision = req.body.login; // "submit" or "cancel"
       if (loginDecision === "cancel") {
         const log = req.logger || logger;
-        log("Login canceled for ticket", { ticket: authz?.ticket });
+        log("Login canceled for ticket", {
+          ticket: authz?.authorizationIssueRequest?.ticket,
+        });
         const response = await authorizationService.fail(
-          authz?.ticket ?? "",
+          authz?.authorizationIssueRequest?.ticket ?? "",
           "NOT_LOGGED_IN"
         );
         req.logger("Login fail response", {
@@ -65,7 +64,7 @@ export const sessionController = {
       req.session.user = username;
 
       // After login, show consent page
-      const scopes = authz?.scopes?.join(",") || "";
+      const scopes = authz?.authorizationIssueRequest?.scopes?.join(",") || "";
       req.logger("consent scopes", { scopes });
       return res.redirect(
         appConfig.consentUrl +
@@ -92,7 +91,8 @@ export const sessionController = {
       (err as any).status = 403;
       return next(err);
     }
-    const { clientName = "", scopes = [] } = req.session.authorization || {};
+    const { clientName = "", authorizationIssueRequest: { scopes = [] } = {} } =
+      req.session.authorization || {};
     res.render("consent", { clientName, scopes });
   },
 
@@ -109,7 +109,8 @@ export const sessionController = {
       }
 
       const decision = req.body.decision; // "approve" or "deny"
-      const ticket = req.session.authorization.ticket;
+      const ticket =
+        req.session.authorization.authorizationIssueRequest?.ticket;
 
       let resultUrl = "";
 
@@ -120,7 +121,7 @@ export const sessionController = {
           ticket,
           user: req.session.user,
           clientId: req.session.authorization.clientId,
-          scopes: req.session.authorization.scopes,
+          scopes: req.session.authorization.authorizationIssueRequest?.scopes,
           clientName: req.session.authorization.clientName,
         });
         const response = await authorizationService.issue(req);
@@ -139,7 +140,7 @@ export const sessionController = {
       } else {
         // Call Authlete /authorization/fail API
         const response = await authorizationService.fail(
-          ticket,
+          ticket ?? "",
           "CONSENT_REQUIRED"
         ); // https://docs.authlete.com/en/shared/latest#post-/api/-serviceId-/auth/authorization
 

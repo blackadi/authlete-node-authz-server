@@ -43,21 +43,36 @@ export const authorizationController = {
           // Save parameters for login/consent steps
           req.session.authorization = {
             resultMessage: result.resultMessage ?? "",
-            ticket: result.ticket ?? "",
+            // ticket: result.ticket ?? "",
             clientId: result.client?.clientId ?? 0,
             clientName: result.client?.clientName ?? "",
-            scopes:
-              (typeof req.query.scope === "string" ? req.query.scope : "")
-                .split(/\s+/)
-                .filter(Boolean)
-                .map((s) => s as unknown as Scope) ?? [],
-            claims: result.idTokenClaims ?? "",
+            // scopes:
+            //   (typeof req.query.scope === "string" ? req.query.scope : "")
+            //     .split(/\s+/)
+            //     .filter(Boolean)
+            //     .map((s) => s as unknown as Scope) ?? [],
+            // claims: result.idTokenClaims ?? "",
+            authorizationIssueRequest: {
+              ticket: result.ticket ?? "",
+              scopes:
+                result.scopes?.map((scope: Scope) => scope.name as string) ??
+                [],
+              subject: req.session.user ?? "",
+              authorizationDetails: result.authorizationDetails,
+            },
           };
           // this will log the curl command session info which contains the ticket and user using connect.sid cookie
           req.logger("TESTING MODE ONLY: curl session cookie", {
             cookie: req.cookies["connect.sid"],
           });
-          return res.redirect(appConfig.loginUrl);
+
+          const currentQueryParams = req.query;
+          const searchParams = new URLSearchParams(
+            currentQueryParams as Record<string, string>
+          );
+          const newUrl = `${appConfig.loginUrl}?${searchParams.toString()}`;
+          console.log(`Redirecting to: ${newUrl}`);
+          return res.redirect(newUrl);
 
         default:
           return res.status(500).send("Unknown authorization action");

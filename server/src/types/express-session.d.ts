@@ -1,4 +1,4 @@
-import { Scope } from "@authlete/typescript-sdk/dist/commonjs/models";
+import { AuthorizationIssueRequest } from "@authlete/typescript-sdk/dist/commonjs/models";
 
 // Extend express-session types to include 'authorization'
 declare module "express-session" {
@@ -6,11 +6,9 @@ declare module "express-session" {
     user?: string;
     authorization?: {
       resultMessage: string;
-      ticket: string;
       clientId?: number;
       clientName?: string;
-      scopes?: Array<Scope>;
-      claims?: string;
+      authorizationIssueRequest?: AuthorizationIssueRequest;
     };
     secret?: string;
     saveUninitialized?: string;

@@ -55,7 +55,7 @@ export class AuthorizationService {
     req: Request & { session: Partial<session.SessionData> }
   ): Promise<AuthorizationIssueResponse> {
     try {
-      let ticket = req.session.authorization?.ticket;
+      let ticket = req.session.authorization?.authorizationIssueRequest?.ticket;
       let subject = req.session.user;
 
       // Throw custom errors that the error handler will catch
@@ -86,14 +86,15 @@ export class AuthorizationService {
 
       // const optionalClaims =
       //   '{"name": "Odai Shalabi","email": "blackadi@blackadi.dev","email_verified": true,"picture": "https://lh3.googleusercontent.com/a/ACg8ocKxOjqZ-NPCUuRAOATIfXjeNrawMCtk6xHBKHJagUKPEURfHWno=s288-c-no"}';
-      const optionalClaims = req.session.authorization?.claims;
+      // const optionalClaims =
+      //   req.session.authorization?.authorizationIssueRequest?.claims;
 
       const response = await authleteApi.authorization.issue({
         serviceId,
         authorizationIssueRequest: {
           ticket: ticket,
           subject: subject,
-          claims: optionalClaims,
+          ...req.session.authorization?.authorizationIssueRequest,
         },
       });
 
