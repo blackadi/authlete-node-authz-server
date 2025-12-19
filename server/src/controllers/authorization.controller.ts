@@ -59,6 +59,7 @@ export const authorizationController = {
                 [],
               subject: req.session.user ?? "",
               authorizationDetails: result.authorizationDetails,
+              claims: result.idTokenClaims,
             },
           };
           // this will log the curl command session info which contains the ticket and user using connect.sid cookie

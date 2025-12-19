@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import {
   AuthorizationFailRequestReason,
   AuthorizationFailResponse,
+  AuthorizationIssueRequest,
   AuthorizationIssueResponse,
   AuthorizationRequest,
   AuthorizationResponse,
@@ -73,27 +74,25 @@ export class AuthorizationService {
         );
         (err as any).status = 401; // Unauthorized
         throw err;
+      } else if (req.session.authorization?.authorizationIssueRequest) {
+        req.session.authorization.authorizationIssueRequest.subject = subject;
       }
 
-      req.logger("Issue authorization response parameters", {
-        ticket,
-        subject,
-      });
-      logger("Issue authorization response parameters", {
-        ticket,
-        subject,
-      });
+      req.logger("Issue authorization request parameters", {
+        reqBody: req.session.authorization?.authorizationIssueRequest,
+      }) ||
+        logger("Issue authorization request parameters", {
+          reqBody: req.session.authorization?.authorizationIssueRequest,
+        });
 
       // const optionalClaims =
       //   '{"name": "Odai Shalabi","email": "blackadi@blackadi.dev","email_verified": true,"picture": "https://lh3.googleusercontent.com/a/ACg8ocKxOjqZ-NPCUuRAOATIfXjeNrawMCtk6xHBKHJagUKPEURfHWno=s288-c-no"}';
       // const optionalClaims =
       //   req.session.authorization?.authorizationIssueRequest?.claims;
 
-      const reqBody = {
+      const reqBody: AuthorizationIssueRequest = {
         ...req.session.authorization?.authorizationIssueRequest,
-        ticket,
-        subject,
-      };
+      } as AuthorizationIssueRequest;
 
       logger("Issue authorization request parameters", { params: reqBody });
 
