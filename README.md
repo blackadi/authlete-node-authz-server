@@ -1,5 +1,9 @@
 # Authlete Node Authorization Server (Example)
 
+<p align="center">
+  <img src="./authlete-server.jpg" alt="pwned-check CLI screenshot" width="300">
+</p>
+
 A small example OAuth 2.0 / OpenID Connect authorization server built with Express and Authlete SDK. This project demonstrates the authorization, token, userinfo, introspection and revocation endpoints and includes simple session-based login and consent pages for interactive flows.
 
 This repository is intended as a learning/demo server — it is not production hardened. Use it to explore the HTTP endpoints and how an OAuth2 flow can be implemented using Authlete APIs.
